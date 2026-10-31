@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lalitha Naturals – Cash Change Management System v1.2</title>
+  <title>Lalitha Naturals – Cash Change Management System v1.3</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -36,7 +37,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <h1 class="text-base sm:text-lg font-bold tracking-wide uppercase leading-none">LALITHA NATURALS</h1>
-              <span class="bg-emerald-800 text-emerald-200 text-[10px] font-mono px-1.5 py-0.5 rounded font-bold border border-emerald-600">v1.2</span>
+              <span class="bg-emerald-800 text-emerald-200 text-[10px] font-mono px-1.5 py-0.5 rounded font-bold border border-emerald-600">v1.3</span>
             </div>
             <p class="text-[11px] sm:text-xs text-emerald-300">Cash Change & Store Vault System</p>
           </div>
@@ -44,7 +45,7 @@
       </div>
 
       <div class="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto justify-between sm:justify-end">
-        <!-- Branch Switcher (Updated label from Role to Branch) -->
+        <!-- Branch Switcher -->
         <div class="flex items-center space-x-1.5 bg-emerald-900/80 px-2.5 py-1 sm:py-1.5 rounded-lg border border-emerald-700/50 text-xs">
           <i class="fa-solid fa-store text-emerald-400 text-xs"></i>
           <span class="text-xs text-emerald-300 font-medium">Branch:</span>
@@ -55,9 +56,10 @@
           </select>
         </div>
 
-        <div class="flex items-center text-[11px] sm:text-xs text-emerald-200 bg-emerald-900/50 px-2.5 py-1 sm:py-1.5 rounded-lg font-mono">
-          <i class="fa-regular fa-calendar-days mr-1.5"></i>
-          <span id="currentDateStr">Sat, 31 Oct 2026</span>
+        <!-- Editable Date Control -->
+        <div class="flex items-center text-[11px] sm:text-xs text-emerald-200 bg-emerald-900/50 px-2 py-1 rounded-lg font-mono border border-emerald-700/50">
+          <i class="fa-regular fa-calendar-days mr-1.5 text-emerald-400"></i>
+          <input type="date" id="systemDatePicker" onchange="handleDateChange(this.value)" class="bg-transparent text-emerald-200 text-xs font-semibold focus:outline-none cursor-pointer">
         </div>
       </div>
     </div>
@@ -277,12 +279,12 @@
         </div>
       </div>
 
-      <!-- TAB 2: MINIMUM DENOMINATIONS MANAGER -->
+      <!-- TAB 2: MINIMUM DENOMINATIONS MANAGER (PER STORE TARGETS) -->
       <div id="tab-min-requirements" class="hidden space-y-6">
         <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h2 class="text-base sm:text-lg font-bold text-slate-800">Minimum Denominations</h2>
-            <p class="text-xs text-slate-500">Compare real-time live stock against configured minimum thresholds</p>
+            <p class="text-xs text-slate-500">Configure separate minimum denomination stock requirements for Gajuwaka and Kurmannapalem</p>
           </div>
           <div id="minReqAdminBadge" class="text-xs font-bold px-3 py-1.5 rounded-lg border"></div>
         </div>
@@ -290,15 +292,16 @@
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <form id="minReqForm" onsubmit="saveMinRequirements(event)">
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse font-mono min-w-[600px]">
+              <table class="w-full text-left text-xs border-collapse font-mono min-w-[700px]">
                 <thead>
                   <tr class="bg-slate-900 text-white font-bold font-sans">
                     <th class="p-3 border-b border-slate-800">DENOMINATION</th>
                     <th class="p-3 text-center bg-emerald-950/80 text-emerald-300 border-b border-emerald-800">GAJUWAKA LIVE</th>
+                    <th class="p-3 text-center bg-emerald-950/60 text-emerald-400 border-b border-emerald-800">GAJUWAKA MIN (PCS)</th>
                     <th class="p-3 text-center bg-blue-950/80 text-blue-300 border-b border-blue-800">KURMANNAPALEM LIVE</th>
+                    <th class="p-3 text-center bg-blue-950/60 text-blue-400 border-b border-blue-800">KURMANNAPALEM MIN (PCS)</th>
                     <th class="p-3 text-center bg-slate-800 text-slate-200 border-b border-slate-700">TOTAL LIVE</th>
-                    <th class="p-3 text-center bg-slate-800 text-amber-400 border-b border-slate-700">MIN REQUIRED (PCS)</th>
-                    <th class="p-3 text-right bg-slate-800 text-emerald-400 border-b border-slate-700">MIN VALUE (₹)</th>
+                    <th class="p-3 text-right bg-slate-800 text-emerald-400 border-b border-slate-700">TOTAL MIN VALUE (₹)</th>
                   </tr>
                 </thead>
                 <tbody id="min-req-tbody" class="divide-y divide-slate-200"></tbody>
@@ -377,7 +380,7 @@
                   <th class="p-3">EMPLOYEE</th>
                   <th class="p-3 text-center">VIEW DETAILS</th>
                   <th class="p-3 text-center">ADMIN ACTIONS</th>
-                  <th class="p-3 text-center">PRINT RECEIPT</th>
+                  <th class="p-3 text-center">RECEIPT OPTIONS</th>
                 </tr>
               </thead>
               <tbody id="all-entries-body" class="divide-y divide-slate-200">
@@ -610,6 +613,29 @@
 
   <!-- PRINT RECEIPT TEMPLATE CONTAINER -->
   <div id="printableArea" class="hidden p-8 bg-white max-w-2xl mx-auto font-mono text-black"></div>
+
+  <!-- MODAL: SUCCESSFUL ENTRY & DOWNLOAD JPEG RECEIPT -->
+  <div id="receiptSuccessModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-4 sm:p-6 space-y-4">
+      <div class="flex items-center space-x-3 text-emerald-700 border-b pb-3">
+        <i class="fa-solid fa-circle-check text-2xl"></i>
+        <div>
+          <h3 class="font-bold text-base text-slate-900">Entry Saved Successfully</h3>
+          <p class="text-xs text-slate-500">Download or view your entry receipt below</p>
+        </div>
+      </div>
+
+      <!-- RECEIPT RENDER CONTAINER FOR JPEG DOWNLOAD -->
+      <div id="receiptCardToDownload" class="bg-white p-4 rounded-xl border border-slate-200 text-xs space-y-3 font-mono"></div>
+
+      <div class="flex flex-col sm:flex-row justify-end gap-2 pt-2 border-t">
+        <button onclick="closeModal('receiptSuccessModal')" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-lg text-xs">Close</button>
+        <button onclick="downloadReceiptAsJpeg()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow flex items-center justify-center">
+          <i class="fa-solid fa-file-image mr-1.5"></i> Download JPEG Receipt
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL: TRANSACTION DETAILS VIEW -->
   <div id="viewTxnModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
@@ -920,7 +946,7 @@
     </div>
   </div>
 
-  <!-- MODAL: VENDOR -->
+  <!-- MODAL: VENDOR ENTRY WITH CONDITIONAL VENDOR INPUTS -->
   <div id="vendorModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="bg-white rounded-2xl shadow-xl max-w-xl w-full p-4 sm:p-6 space-y-4 sm:space-y-5 my-4 sm:my-8 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
@@ -932,7 +958,7 @@
         <!-- Category / Reason Dropdown -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Reason / Category <span class="text-red-500">*</span></label>
-          <select id="venCategory" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required>
+          <select id="venCategory" onchange="toggleVendorContactFields(this.value)" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required>
             <option value="Vendor Change Received" selected>Vendor Change Received</option>
             <option value="Emergency Change Procure">Emergency Change Procure</option>
             <option value="Direct Cash Purchase">Direct Cash Purchase</option>
@@ -940,14 +966,15 @@
           </select>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <!-- Vendor Name & Mobile (Hidden if Reason is not Vendor Change Received) -->
+        <div id="vendorContactRow" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Vendor Name <span class="text-red-500">*</span></label>
-            <input type="text" id="venName" required placeholder="e.g. Sri Lakshmi Wholesale" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs">
+            <input type="text" id="venName" placeholder="e.g. Sri Lakshmi Wholesale" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs">
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number <span class="text-red-500">*</span></label>
-            <input type="tel" id="venMobile" required placeholder="10-digit number" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-mono">
+            <input type="tel" id="venMobile" placeholder="10-digit number" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-mono">
           </div>
         </div>
 
@@ -1091,8 +1118,7 @@
 
   <!-- JAVASCRIPT APP CORE -->
   <script>
-    const APP_VERSION = "1.2";
-    const TARGET_EMAIL = "lalithanaturals@gmail.com";
+    const APP_VERSION = "1.3";
 
     const DENOM_CONFIG = [
       { key: 'n500', label: '₹500', val: 500 },
@@ -1108,20 +1134,13 @@
 
     const ADMIN_PIN = "1234";
 
-    // Completely erased default data structure for clean production start
     const DEFAULT_DATA = {
       role: 'gajuwaka',
       isAdminAuthenticated: false,
-      minRequirements: {
-        n500: 10,
-        n200: 15,
-        n100: 25,
-        n50: 30,
-        n20: 40,
-        n10: 50,
-        c5: 50,
-        c2: 50,
-        c1: 50
+      systemDate: new Date().toISOString().split('T')[0],
+      storeMinRequirements: {
+        gajuwaka: { n500: 0, n200: 0, n100: 0, n50: 100, n20: 100, n10: 200, c5: 300, c2: 400, c1: 500 },
+        kurmannapalem: { n500: 10, n200: 10, n100: 10, n50: 10, n20: 10, n10: 10, c5: 20, c2: 20, c1: 20 }
       },
       branches: {
         gajuwaka: { c1: 0, c2: 0, c5: 0, n10: 0, n20: 0, n50: 0, n100: 0, n200: 0, n500: 0 },
@@ -1135,24 +1154,45 @@
 
     let appState = JSON.parse(JSON.stringify(DEFAULT_DATA));
     let pendingSubmission = null;
+    let activeReceiptForDownload = null;
 
     document.addEventListener('DOMContentLoaded', () => {
       loadStateFromStorage();
+      initDateControl();
       renderAllViews();
     });
 
     function saveState() {
-      localStorage.setItem('lalitha_cash_app_data_v1.2', JSON.stringify(appState));
+      localStorage.setItem('lalitha_cash_app_data_v1.3', JSON.stringify(appState));
     }
 
     function loadStateFromStorage() {
-      const saved = localStorage.getItem('lalitha_cash_app_data_v1.2');
+      const saved = localStorage.getItem('lalitha_cash_app_data_v1.3');
       if (saved) {
         try {
           appState = JSON.parse(saved);
-          if (!appState.minRequirements) appState.minRequirements = DEFAULT_DATA.minRequirements;
+          if (!appState.storeMinRequirements) appState.storeMinRequirements = DEFAULT_DATA.storeMinRequirements;
+          if (!appState.systemDate) appState.systemDate = new Date().toISOString().split('T')[0];
         } catch(e) { console.error("Error loading state", e); }
       }
+    }
+
+    function initDateControl() {
+      const picker = document.getElementById('systemDatePicker');
+      if (picker) picker.value = appState.systemDate;
+    }
+
+    function handleDateChange(newDate) {
+      if (!newDate) return;
+      appState.systemDate = newDate;
+      saveState();
+      renderAllViews();
+    }
+
+    function getActiveFormattedDate() {
+      if (!appState.systemDate) return new Date().toLocaleString();
+      const d = new Date(appState.systemDate + 'T12:00:00');
+      return d.toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
     }
 
     function handleRoleChange(selectedRole) {
@@ -1215,36 +1255,82 @@
       }
     }
 
-    /* AUTOMATIC EMAIL NOTIFICATION GENERATOR */
-    function sendEmailNotification(category, refId, store, amount, handler, remarks, denomsObj) {
-      const subject = `[Lalitha Naturals Cash Notification] - ${category} (Ref: ${refId})`;
-      
-      let denomText = "";
+    /* SHOW SUCCESS RECEIPT MODAL & TRIGGER JPEG GENERATION */
+    function showEntrySuccessModal(refId, category, store, amount, handler, remarks, denomsObj) {
+      activeReceiptForDownload = { refId, category, store, amount, handler, remarks, denomsObj, date: getActiveFormattedDate() };
+
+      let denomRows = '';
       if (denomsObj) {
         for (let k in denomsObj) {
           const dObj = DENOM_CONFIG.find(d => d.key === k);
           if (dObj && denomsObj[k] > 0) {
-            denomText += `• ${dObj.label}: ${denomsObj[k]} pcs (Total ₹${denomsObj[k] * dObj.val})\n`;
+            denomRows += `
+              <div class="flex justify-between py-0.5 border-b border-slate-100">
+                <span>${dObj.label} × ${denomsObj[k]} pcs</span>
+                <span class="font-bold">₹${(denomsObj[k] * dObj.val).toLocaleString('en-IN')}</span>
+              </div>
+            `;
           }
         }
       }
 
-      const bodyText = `LALITHA NATURALS CASH ENTRY REPORT (v1.2)\n` +
-        `-----------------------------------------\n` +
-        `Entry Category : ${category}\n` +
-        `Reference ID   : ${refId}\n` +
-        `Date & Time    : ${new Date().toLocaleString()}\n` +
-        `Store Location : ${store.toUpperCase()}\n` +
-        `Amount Value   : ₹${Math.abs(amount).toLocaleString('en-IN')}\n` +
-        `Handled By     : ${handler}\n` +
-        `Remarks/Notes  : ${remarks || 'None'}\n\n` +
-        `DENOMINATION BREAKDOWN:\n` +
-        `${denomText || 'None'}\n` +
-        `-----------------------------------------\n` +
-        `Verified automated transmission.`;
+      const card = document.getElementById('receiptCardToDownload');
+      card.innerHTML = `
+        <div class="text-center border-b pb-2">
+          <h2 class="text-base font-black text-emerald-950 uppercase">Lalitha Naturals</h2>
+          <p class="text-[10px] text-slate-500">Cash Entry Receipt (v1.3)</p>
+        </div>
+        <div class="space-y-1 text-[11px]">
+          <div class="flex justify-between"><span>Ref ID:</span><strong class="font-bold">${refId}</strong></div>
+          <div class="flex justify-between"><span>Date:</span><span>${activeReceiptForDownload.date}</span></div>
+          <div class="flex justify-between"><span>Category:</span><span>${category}</span></div>
+          <div class="flex justify-between"><span>Store:</span><span class="capitalize font-semibold">${store}</span></div>
+          <div class="flex justify-between"><span>Employee:</span><span>${handler}</span></div>
+        </div>
+        <div class="pt-2 border-t">
+          <div class="font-bold text-[10px] text-slate-400 uppercase mb-1">Denominations:</div>
+          ${denomRows || '<div class="text-slate-400">N/A</div>'}
+        </div>
+        <div class="pt-2 border-t flex justify-between items-center text-sm font-bold">
+          <span>Total Amount:</span>
+          <span class="text-emerald-700 font-mono text-base">₹${Math.abs(amount).toLocaleString('en-IN')}</span>
+        </div>
+      `;
 
-      const mailtoUrl = `mailto:${TARGET_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
-      window.open(mailtoUrl, '_blank');
+      document.getElementById('receiptSuccessModal').classList.remove('hidden');
+    }
+
+    /* DOWNLOAD RECEIPT CARD AS JPEG IMAGE */
+    function downloadReceiptAsJpeg() {
+      const card = document.getElementById('receiptCardToDownload');
+      if (!card || !activeReceiptForDownload) return;
+
+      html2canvas(card, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `Receipt_${activeReceiptForDownload.refId}.jpg`;
+        link.href = canvas.toDataURL('image/jpeg', 0.95);
+        link.click();
+      }).catch(err => {
+        console.error("Image generation failed", err);
+        alert("Receipt download failed. You can use print options instead.");
+      });
+    }
+
+    /* CONDITIONAL FIELD VISIBILITY IN VENDOR MODAL */
+    function toggleVendorContactFields(categoryVal) {
+      const contactRow = document.getElementById('vendorContactRow');
+      const venName = document.getElementById('venName');
+      const venMobile = document.getElementById('venMobile');
+
+      if (categoryVal === 'Vendor Change Received') {
+        contactRow.classList.remove('hidden');
+        venName.setAttribute('required', 'true');
+        venMobile.setAttribute('required', 'true');
+      } else {
+        contactRow.classList.add('hidden');
+        venName.removeAttribute('required');
+        venMobile.removeAttribute('required');
+      }
     }
 
     /* NAVIGATION TAB SWITCHER */
@@ -1314,6 +1400,7 @@
       document.getElementById('dash-kurmannapalem-large').innerText = `₹${calcGroup('kurmannapalem', ['n100','n200','n500']).toLocaleString('en-IN')}`;
     }
 
+    /* RENDER MINIMUM DENOMINATIONS MANAGER WITH SEPARATE STORE INPUTS */
     function renderMinRequirementsTab() {
       const tbody = document.getElementById('min-req-tbody');
       const badge = document.getElementById('minReqAdminBadge');
@@ -1338,8 +1425,9 @@
         const kVal = kQty * d.val;
         const totalLiveQty = gQty + kQty;
 
-        const minQty = appState.minRequirements[d.key] || 0;
-        const minVal = minQty * d.val;
+        const gMinQty = appState.storeMinRequirements?.gajuwaka?.[d.key] || 0;
+        const kMinQty = appState.storeMinRequirements?.kurmannapalem?.[d.key] || 0;
+        const totalMinVal = (gMinQty + kMinQty) * d.val;
 
         tbody.innerHTML += `
           <tr class="hover:bg-slate-50 border-b border-slate-200">
@@ -1348,25 +1436,32 @@
               <span class="font-bold text-emerald-800">${gQty} pcs</span>
               <span class="text-[10px] text-slate-500 block">(₹${gVal.toLocaleString('en-IN')})</span>
             </td>
-            <td class="p-3 text-center bg-blue-50/40 text-slate-700 font-mono border-r border-slate-200">
+            <td class="p-3 text-center bg-emerald-50/20 font-mono">
+              <input type="number" id="min-gajuwaka-${d.key}" min="0" value="${gMinQty}" oninput="updateMinReqRowTotalVal('${d.key}', ${d.val})" ${!isAdmin ? 'disabled' : ''} class="w-20 text-center border-2 border-slate-300 rounded p-1 font-bold ${!isAdmin ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'focus:border-emerald-500 bg-white text-slate-900'}">
+            </td>
+            <td class="p-3 text-center bg-blue-50/40 text-slate-700 font-mono border-l border-slate-200">
               <span class="font-bold text-blue-800">${kQty} pcs</span>
               <span class="text-[10px] text-slate-500 block">(₹${kVal.toLocaleString('en-IN')})</span>
             </td>
-            <td class="p-3 text-center font-bold font-mono text-slate-800 bg-slate-50 border-r border-slate-200">${totalLiveQty} pcs</td>
-            <td class="p-3 text-center font-mono">
-              <input type="number" id="min-input-${d.key}" min="0" value="${minQty}" oninput="updateMinReqRowVal('${d.key}', ${d.val})" ${!isAdmin ? 'disabled' : ''} class="w-24 sm:w-28 text-center border-2 border-slate-300 rounded p-1 font-bold ${!isAdmin ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'focus:border-emerald-500 bg-white text-slate-900'}">
+            <td class="p-3 text-center bg-blue-50/20 font-mono border-r border-slate-200">
+              <input type="number" id="min-kurmannapalem-${d.key}" min="0" value="${kMinQty}" oninput="updateMinReqRowTotalVal('${d.key}', ${d.val})" ${!isAdmin ? 'disabled' : ''} class="w-20 text-center border-2 border-slate-300 rounded p-1 font-bold ${!isAdmin ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'focus:border-blue-500 bg-white text-slate-900'}">
             </td>
-            <td class="p-3 text-right font-black font-mono text-emerald-700" id="min-val-disp-${d.key}">₹${minVal.toLocaleString('en-IN')}</td>
+            <td class="p-3 text-center font-bold font-mono text-slate-800 bg-slate-50 border-r border-slate-200">${totalLiveQty} pcs</td>
+            <td class="p-3 text-right font-black font-mono text-emerald-700" id="min-val-disp-${d.key}">₹${totalMinVal.toLocaleString('en-IN')}</td>
           </tr>
         `;
       });
     }
 
-    function updateMinReqRowVal(key, valuePerNote) {
-      const inp = document.getElementById(`min-input-${key}`);
+    function updateMinReqRowTotalVal(key, valuePerNote) {
+      const gInp = document.getElementById(`min-gajuwaka-${key}`);
+      const kInp = document.getElementById(`min-kurmannapalem-${key}`);
       const valDisp = document.getElementById(`min-val-disp-${key}`);
-      const qty = parseInt(inp.value) || 0;
-      valDisp.innerText = `₹${(qty * valuePerNote).toLocaleString('en-IN')}`;
+
+      const gQty = parseInt(gInp?.value) || 0;
+      const kQty = parseInt(kInp?.value) || 0;
+
+      valDisp.innerText = `₹${((gQty + kQty) * valuePerNote).toLocaleString('en-IN')}`;
     }
 
     function saveMinRequirements(e) {
@@ -1374,13 +1469,16 @@
       if (appState.role !== 'owner') return alert("Access Denied.");
 
       DENOM_CONFIG.forEach(d => {
-        const inp = document.getElementById(`min-input-${d.key}`);
-        if (inp) appState.minRequirements[d.key] = parseInt(inp.value) || 0;
+        const gInp = document.getElementById(`min-gajuwaka-${d.key}`);
+        const kInp = document.getElementById(`min-kurmannapalem-${d.key}`);
+
+        if (gInp) appState.storeMinRequirements.gajuwaka[d.key] = parseInt(gInp.value) || 0;
+        if (kInp) appState.storeMinRequirements.kurmannapalem[d.key] = parseInt(kInp.value) || 0;
       });
 
       saveState();
       renderAllViews();
-      alert("Minimum Denominations saved successfully!");
+      alert("Store Minimum Denominations saved successfully!");
     }
 
     function renderAllEntriesTab() {
@@ -1461,16 +1559,22 @@
             `}
           </td>
           <td class="p-3 text-center space-x-1 font-sans">
+            <button onclick="triggerJpegDownloadFromList('${t.refId}')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-2 py-1 rounded text-[10px] font-bold">
+              <i class="fa-solid fa-file-image mr-1"></i> JPEG
+            </button>
             <button onclick="printReceipt('${t.refId}', 'thermal')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-2 py-1 rounded text-[10px] font-bold border border-slate-300">
               <i class="fa-solid fa-print mr-1"></i> Thermal
-            </button>
-            <button onclick="printReceipt('${t.refId}', 'a4')" class="bg-slate-800 hover:bg-slate-900 text-white px-2 py-1 rounded text-[10px] font-bold">
-              <i class="fa-solid fa-file-pdf mr-1"></i> A4 Doc
             </button>
           </td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    function triggerJpegDownloadFromList(refId) {
+      const txn = appState.transactions.find(t => t.refId === refId);
+      if (!txn) return;
+      showEntrySuccessModal(txn.refId, txn.category, txn.branch, txn.amount, txn.handler, txn.remarks, txn.denoms);
     }
 
     function revertAndDeleteEntry(refId) {
@@ -1567,13 +1671,14 @@
         const v = appState.vendorPayments.find(v => v.refId === refId);
         if (!v) return;
         title.innerText = `Vendor Entry ${v.refId}`;
-        sub.innerText = `Vendor: ${v.vendorName}`;
+        sub.innerText = `Vendor: ${v.vendorName || 'N/A'}`;
 
         html = `
           <div class="bg-slate-50 p-3 rounded-lg border space-y-1">
             <div class="flex justify-between"><span>Date:</span> <strong>${v.date}</strong></div>
             <div class="flex justify-between"><span>Category:</span> <strong>${v.category || 'Vendor Change Received'}</strong></div>
-            <div class="flex justify-between"><span>Mobile:</span> <strong>${v.vendorMobile}</strong></div>
+            <div class="flex justify-between"><span>Vendor Name:</span> <strong>${v.vendorName || 'N/A'}</strong></div>
+            <div class="flex justify-between"><span>Mobile:</span> <strong>${v.vendorMobile || 'N/A'}</strong></div>
             <div class="flex justify-between"><span>Receiving Store:</span> <strong>${v.branch}</strong></div>
             <div class="flex justify-between"><span>Payment Method:</span> <strong>${v.paymentMethod}</strong></div>
             <div class="flex justify-between"><span>Payment Ref:</span> <strong>${v.payRef}</strong></div>
@@ -1707,7 +1812,7 @@
       ['gajuwaka', 'kurmannapalem'].forEach(b => {
         DENOM_CONFIG.forEach(d => {
           const qty = appState.branches[b][d.key] || 0;
-          const minReq = appState.minRequirements[d.key] || 0;
+          const minReq = appState.storeMinRequirements?.[b]?.[d.key] || 0;
           if (qty < minReq) {
             warnings.push({ branch: b, denom: d.label, qty, min: minReq });
           }
@@ -1836,7 +1941,7 @@
 
       trf.status = 'APPROVED';
       trf.approvedBy = appState.role;
-      trf.approvedDate = new Date().toLocaleString();
+      trf.approvedDate = getActiveFormattedDate();
 
       appState.transactions.push({
         refId: `${trf.refId}-OUT`,
@@ -1862,11 +1967,10 @@
         denoms: trf.denoms
       });
 
-      sendEmailNotification(`Store Transfer Approved (${fromB} -> ${toB})`, trf.refId, toB, trf.amount, trf.handler, trf.remarks, trf.denoms);
+      showEntrySuccessModal(trf.refId, `Store Transfer Approved (${fromB} -> ${toB})`, toB, trf.amount, trf.handler, trf.remarks, trf.denoms);
 
       saveState();
       renderAllViews();
-      alert(`Transfer ${refId} approved!`);
     }
 
     function rejectTransfer(refId) {
@@ -1896,8 +2000,8 @@
             <td class="p-3 font-mono font-bold text-slate-800">${v.refId}</td>
             <td class="p-3 text-slate-500 text-[11px] font-mono">${v.date}</td>
             <td class="p-3 font-sans">
-              <div class="font-bold text-slate-800">${v.vendorName}</div>
-              <div class="text-[10px] text-slate-400 font-mono">${v.vendorMobile}</div>
+              <div class="font-bold text-slate-800">${v.vendorName || 'N/A'}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${v.vendorMobile || ''}</div>
             </td>
             <td class="p-3 capitalize font-semibold text-slate-700 font-sans">${v.branch}</td>
             <td class="p-3 text-right font-black font-mono text-emerald-700">₹${v.cashValueReceived.toLocaleString('en-IN')}</td>
@@ -1959,7 +2063,7 @@
           const dObj = DENOM_CONFIG.find(d => d.key === k);
           const val = txn.denoms[k] * dObj.val;
           denomRows += `
-            <div style="display:flex; justify-content:space-between; margin-bottom: 2px;">
+            <div style="display:flex; justify-between; margin-bottom: 2px;">
               <span>${dObj.label} x ${txn.denoms[k]} pcs</span>
               <span>₹${val.toLocaleString('en-IN')}</span>
             </div>
@@ -1967,69 +2071,32 @@
         }
       }
 
-      if (format === 'thermal') {
-        printableArea.innerHTML = `
-          <div style="width: 280px; margin: 0 auto; font-family: monospace; font-size: 11px; text-align: center; border: 1px dashed #000; padding: 12px;">
-            <h2 style="font-size: 14px; font-weight: bold; margin: 0;">LALITHA NATURALS</h2>
-            <p style="font-size: 10px; margin: 2px 0 8px 0;">Cash Change System Receipt (v1.2)</p>
-            <hr style="border-top: 1px dashed #000; margin: 6px 0;">
-            <div style="text-align: left;">
-              <div><strong>Ref ID:</strong> ${txn.refId}</div>
-              <div><strong>Date:</strong> ${txn.date}</div>
-              <div><strong>Store:</strong> ${txn.branch}</div>
-              <div><strong>Category:</strong> ${txn.category}</div>
-              <div><strong>Employee:</strong> ${txn.handler}</div>
-            </div>
-            <hr style="border-top: 1px dashed #000; margin: 6px 0;">
-            <div style="text-align: left; font-size: 10px;">
-              <strong style="display:block; margin-bottom:4px;">DENOMINATIONS:</strong>
-              ${denomRows || '<div>N/A</div>'}
-            </div>
-            <hr style="border-top: 1px dashed #000; margin: 6px 0;">
-            <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: bold;">
-              <span>TOTAL VALUE:</span>
-              <span>₹${Math.abs(txn.amount).toLocaleString('en-IN')}</span>
-            </div>
-            <hr style="border-top: 1px dashed #000; margin: 6px 0;">
-            <p style="font-size: 9px; margin-top: 8px;">Thank you! Verified Record.</p>
+      printableArea.innerHTML = `
+        <div style="width: 280px; margin: 0 auto; font-family: monospace; font-size: 11px; text-align: center; border: 1px dashed #000; padding: 12px;">
+          <h2 style="font-size: 14px; font-weight: bold; margin: 0;">LALITHA NATURALS</h2>
+          <p style="font-size: 10px; margin: 2px 0 8px 0;">Cash Change System Receipt (v1.3)</p>
+          <hr style="border-top: 1px dashed #000; margin: 6px 0;">
+          <div style="text-align: left;">
+            <div><strong>Ref ID:</strong> ${txn.refId}</div>
+            <div><strong>Date:</strong> ${txn.date}</div>
+            <div><strong>Store:</strong> ${txn.branch}</div>
+            <div><strong>Category:</strong> ${txn.category}</div>
+            <div><strong>Employee:</strong> ${txn.handler}</div>
           </div>
-        `;
-      } else {
-        printableArea.innerHTML = `
-          <div style="width: 100%; font-family: sans-serif; padding: 20px; border: 2px solid #064e3b;">
-            <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 12px;">
-              <div>
-                <h1 style="font-size: 20px; font-weight: bold; color: #064e3b; margin: 0;">LALITHA NATURALS</h1>
-                <p style="font-size: 12px; color: #555; margin: 0;">Internal Cash Change Voucher (v1.2)</p>
-              </div>
-              <div style="text-align: right;">
-                <h2 style="font-size: 16px; font-weight: bold; margin: 0;">VOUCHER #${txn.refId}</h2>
-                <p style="font-size: 11px; margin: 0;">${txn.date}</p>
-              </div>
-            </div>
-            <div style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 12px;">
-              <div><strong>Store Location:</strong> ${txn.branch}</div>
-              <div><strong>Entry Type:</strong> ${txn.type}</div>
-              <div><strong>Reason / Category:</strong> ${txn.category}</div>
-              <div><strong>Employee Name:</strong> ${txn.handler}</div>
-            </div>
-            <div style="margin-top: 20px;">
-              <h3 style="font-size: 12px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 4px;">Denomination Details</h3>
-              <div style="font-size: 12px; margin-top: 8px;">
-                ${denomRows || '<div>N/A</div>'}
-              </div>
-            </div>
-            <div style="margin-top: 20px; border-top: 2px solid #064e3b; padding-top: 8px; display: flex; justify-content: space-between; font-size: 16px; font-weight: bold;">
-              <span>Total Transaction Value:</span>
-              <span style="color: #064e3b;">₹${Math.abs(txn.amount).toLocaleString('en-IN')}</span>
-            </div>
-            <div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 11px; text-align: center;">
-              <div style="border-top: 1px solid #000; width: 150px; padding-top: 4px;">Employee Signature</div>
-              <div style="border-top: 1px solid #000; width: 150px; padding-top: 4px;">Store Manager / Owner</div>
-            </div>
+          <hr style="border-top: 1px dashed #000; margin: 6px 0;">
+          <div style="text-align: left; font-size: 10px;">
+            <strong style="display:block; margin-bottom:4px;">DENOMINATIONS:</strong>
+            ${denomRows || '<div>N/A</div>'}
           </div>
-        `;
-      }
+          <hr style="border-top: 1px dashed #000; margin: 6px 0;">
+          <div style="display: flex; justify-between: space-between; font-size: 13px; font-weight: bold;">
+            <span>TOTAL VALUE:</span>
+            <span>₹${Math.abs(txn.amount).toLocaleString('en-IN')}</span>
+          </div>
+          <hr style="border-top: 1px dashed #000; margin: 6px 0;">
+          <p style="font-size: 9px; margin-top: 8px;">Thank you! Verified Record.</p>
+        </div>
+      `;
 
       printableArea.classList.remove('hidden');
       window.print();
@@ -2157,9 +2224,11 @@
         }
       }
 
+      const formattedDate = getActiveFormattedDate();
+
       appState.transactions.push({
         refId: ref,
-        date: new Date().toLocaleString(),
+        date: formattedDate,
         type: type === 'credit' ? 'CREDIT' : 'DEBIT',
         branch: branch,
         category: cat,
@@ -2169,12 +2238,12 @@
         denoms: deltaObj
       });
 
-      sendEmailNotification(cat, ref, branch, type === 'credit' ? totalAmount : -totalAmount, handler, remarks, deltaObj);
-
       pendingSubmission = null;
       saveState();
       renderAllViews();
       closeModal('confirmModal');
+
+      showEntrySuccessModal(ref, cat, branch, type === 'credit' ? totalAmount : -totalAmount, handler, remarks, deltaObj);
     }
 
     function handleEnterTab(e, nextId) {
@@ -2311,7 +2380,8 @@
       document.getElementById('venPayRef').value = '';
       document.getElementById('venPaidAmount').value = '';
       document.getElementById('venCategory').value = 'Vendor Change Received';
-      
+
+      toggleVendorContactFields('Vendor Change Received');
       updateVendorModalStoreStock();
       document.getElementById('vendorModal').classList.remove('hidden');
     }
@@ -2369,7 +2439,7 @@
 
       appState.transfers.push({
         refId: ref,
-        date: new Date().toLocaleString(),
+        date: getActiveFormattedDate(),
         fromBranch: fromB,
         toBranch: toB,
         amount: totalAmount,
@@ -2381,19 +2451,18 @@
         status: 'PENDING APPROVAL'
       });
 
-      sendEmailNotification(`Store Transfer Requested (${fromB} -> ${toB})`, ref, fromB, totalAmount, handler, remarks, deltaObj);
-
       saveState();
       renderAllViews();
       closeModal('transferModal');
-      alert(`Transfer request ${ref} created!`);
+
+      showEntrySuccessModal(ref, `Store Transfer Requested (${fromB} -> ${toB})`, fromB, totalAmount, handler, remarks, deltaObj);
     }
 
     function handleVendorSubmit(e) {
       e.preventDefault();
       const cat = document.getElementById('venCategory').value;
-      const vName = document.getElementById('venName').value;
-      const vMobile = document.getElementById('venMobile').value;
+      const vName = document.getElementById('venName')?.value || '';
+      const vMobile = document.getElementById('venMobile')?.value || '';
       const branch = document.getElementById('venBranch').value;
       const method = document.getElementById('venMethod').value;
       const payRef = document.getElementById('venPayRef').value;
@@ -2410,12 +2479,16 @@
 
       for (let k in deltaObj) appState.branches[branch][k] = (appState.branches[branch][k] || 0) + deltaObj[k];
 
-      appState.vendorPayments.push({ refId: ref, date: new Date().toLocaleString(), category: cat, vendorName: vName, vendorMobile: vMobile, branch, cashValueReceived: totalCashReceived, paymentMethod: method, payRef, paidAmount: paidAmt, denoms: deltaObj });
-      appState.transactions.push({ refId: ref, date: new Date().toLocaleString(), type: 'VENDOR_PROCURE', branch, category: `${cat} (${vName})`, amount: totalCashReceived, handler: `Paid via ${method}`, remarks: `Ref: ${payRef}`, denoms: deltaObj });
+      const formattedDate = getActiveFormattedDate();
 
-      sendEmailNotification(cat, ref, branch, totalCashReceived, vName, `Ref: ${payRef}`, deltaObj);
+      appState.vendorPayments.push({ refId: ref, date: formattedDate, category: cat, vendorName: vName, vendorMobile: vMobile, branch, cashValueReceived: totalCashReceived, paymentMethod: method, payRef, paidAmount: paidAmt, denoms: deltaObj });
+      appState.transactions.push({ refId: ref, date: formattedDate, type: 'VENDOR_PROCURE', branch, category: `${cat}${vName ? ' (' + vName + ')' : ''}`, amount: totalCashReceived, handler: `Paid via ${method}`, remarks: `Ref: ${payRef}`, denoms: deltaObj });
 
-      saveState(); renderAllViews(); closeModal('vendorModal');
+      saveState(); 
+      renderAllViews(); 
+      closeModal('vendorModal');
+
+      showEntrySuccessModal(ref, cat, branch, totalCashReceived, vName || 'N/A', `Ref: ${payRef}`, deltaObj);
     }
 
     function handleSoiledSubmit(e) {
@@ -2431,12 +2504,16 @@
 
       appState.branches[branch][denomKey] -= qty;
       const id = `SLD-${Math.floor(1000 + Math.random() * 9000)}`;
-      appState.soiledNotes.push({ id, date: new Date().toLocaleString(), branch, denomKey, qty, totalVal, source, status: 'ISOLATED' });
-      appState.transactions.push({ refId: id, date: new Date().toLocaleString(), type: 'SOILED_LOG', branch, category: `Damaged Cash Entry (${dObj.label})`, amount: -totalVal, handler: 'Vault Custodian', remarks: source, denoms: { [denomKey]: qty } });
+      const formattedDate = getActiveFormattedDate();
 
-      sendEmailNotification(`Damaged Note Vault Log (${dObj.label})`, id, branch, -totalVal, 'Vault Custodian', source, { [denomKey]: qty });
+      appState.soiledNotes.push({ id, date: formattedDate, branch, denomKey, qty, totalVal, source, status: 'ISOLATED' });
+      appState.transactions.push({ refId: id, date: formattedDate, type: 'SOILED_LOG', branch, category: `Damaged Cash Entry (${dObj.label})`, amount: -totalVal, handler: 'Vault Custodian', remarks: source, denoms: { [denomKey]: qty } });
 
-      saveState(); renderAllViews(); closeModal('soiledModal');
+      saveState(); 
+      renderAllViews(); 
+      closeModal('soiledModal');
+
+      showEntrySuccessModal(id, `Damaged Cash Vault Log (${dObj.label})`, branch, -totalVal, 'Vault Custodian', source, { [denomKey]: qty });
     }
 
     function exportCSV() {
