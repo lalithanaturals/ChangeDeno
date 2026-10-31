@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lalitha Naturals – Cash Change Management System</title>
+  <title>Lalitha Naturals – Cash Change Management System v1.1</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -34,7 +34,10 @@
           LN
         </div>
         <div>
-          <h1 class="text-lg font-bold tracking-wide uppercase leading-none">LALITHA NATURALS</h1>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-lg font-bold tracking-wide uppercase leading-none">LALITHA NATURALS</h1>
+            <span class="bg-emerald-800 text-emerald-200 text-[10px] font-mono px-1.5 py-0.5 rounded font-bold border border-emerald-600">v1.1</span>
+          </div>
           <p class="text-xs text-emerald-300">Cash Change & Store Vault System</p>
         </div>
       </div>
@@ -62,7 +65,7 @@
   <!-- MAIN WRAPPER -->
   <div class="w-full px-4 sm:px-6 lg:px-8 py-6 flex-1 grid grid-cols-1 lg:grid-cols-6 gap-6 no-print">
 
-    <!-- SIDEBAR NAVIGATION (PERFECT LEFT ALIGNMENT EVEN ON ACTIVE STATE) -->
+    <!-- SIDEBAR NAVIGATION -->
     <aside class="lg:col-span-1 space-y-2">
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3 space-y-3 sticky top-20">
         
@@ -273,7 +276,7 @@
         </div>
       </div>
 
-      <!-- TAB 2: MINIMUM DENOMINATIONS MANAGER (WITH LIVE STOCK & VALUE) -->
+      <!-- TAB 2: MINIMUM DENOMINATIONS MANAGER -->
       <div id="tab-min-requirements" class="hidden space-y-6">
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -364,7 +367,7 @@
                   <th class="p-3 text-right">AMOUNT</th>
                   <th class="p-3">EMPLOYEE</th>
                   <th class="p-3 text-center">VIEW DETAILS</th>
-                  <th class="p-3 text-center">ADMIN EDIT</th>
+                  <th class="p-3 text-center">ADMIN ACTIONS</th>
                   <th class="p-3 text-center">PRINT RECEIPT</th>
                 </tr>
               </thead>
@@ -916,6 +919,18 @@
         <button onclick="closeModal('vendorModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <form id="vendorForm" onsubmit="handleVendorSubmit(event)" class="space-y-4">
+        
+        <!-- Added Reason / Category Dropdown -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Reason / Category <span class="text-red-500">*</span></label>
+          <select id="venCategory" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required>
+            <option value="Vendor Change Received" selected>Vendor Change Received</option>
+            <option value="Emergency Change Procure">Emergency Change Procure</option>
+            <option value="Direct Cash Purchase">Direct Cash Purchase</option>
+            <option value="Other Vendor Adjustment">Other Vendor Adjustment</option>
+          </select>
+        </div>
+
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Vendor Name <span class="text-red-500">*</span></label>
@@ -1067,6 +1082,8 @@
 
   <!-- JAVASCRIPT APP CORE -->
   <script>
+    const APP_VERSION = "1.1";
+
     const DENOM_CONFIG = [
       { key: 'n500', label: '₹500', val: 500 },
       { key: 'n200', label: '₹200', val: 200 },
@@ -1161,6 +1178,7 @@
           paymentMethod: 'PhonePe (UPI)',
           payRef: 'upi1234',
           paidAmount: 10970,
+          category: 'Vendor Change Received',
           denoms: { c1: 30, c2: 20, c5: 12, n10: 10, n20: 2, n50: 10, n100: 10, n200: 20, n500: 10 }
         }
       ]
@@ -1175,11 +1193,11 @@
     });
 
     function saveState() {
-      localStorage.setItem('lalitha_cash_app_data_v11', JSON.stringify(appState));
+      localStorage.setItem('lalitha_cash_app_data_v1.1', JSON.stringify(appState));
     }
 
     function loadStateFromStorage() {
-      const saved = localStorage.getItem('lalitha_cash_app_data_v11');
+      const saved = localStorage.getItem('lalitha_cash_app_data_v1.1');
       if (saved) {
         try {
           appState = JSON.parse(saved);
@@ -1223,7 +1241,7 @@
       document.getElementById('roleSelect').value = appState.role;
     }
 
-    /* NAVIGATION TAB SWITCHER (STRICT UNIFORM ALIGNMENT & BORDER RESET) */
+    /* NAVIGATION TAB SWITCHER */
     function switchTab(tabId) {
       const tabs = ['dashboard', 'all-entries', 'denominations', 'min-requirements', 'branches', 'transfers', 'vendors', 'soiled'];
       tabs.forEach(t => {
@@ -1290,7 +1308,7 @@
       document.getElementById('dash-kurmannapalem-large').innerText = `₹${calcGroup('kurmannapalem', ['n100','n200','n500']).toLocaleString('en-IN')}`;
     }
 
-    /* RENDER MINIMUM DENOMINATIONS TAB (WITH LIVE STOCK BREAKDOWN & VALUES) */
+    /* RENDER MINIMUM DENOMINATIONS TAB */
     function renderMinRequirementsTab() {
       const tbody = document.getElementById('min-req-tbody');
       const badge = document.getElementById('minReqAdminBadge');
@@ -1418,9 +1436,14 @@
           </td>
           <td class="p-3 text-center font-sans">
             ${appState.role === 'owner' ? `
-              <button onclick="openEditEntryModal('${t.refId}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-2.5 py-1 rounded border border-blue-200 text-[10px]">
-                <i class="fa-solid fa-pen mr-1"></i> Edit
-              </button>
+              <div class="flex items-center justify-center space-x-1">
+                <button onclick="openEditEntryModal('${t.refId}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded border border-blue-200 text-[10px]">
+                  <i class="fa-solid fa-pen mr-1"></i> Edit
+                </button>
+                <button onclick="revertAndDeleteEntry('${t.refId}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold px-2 py-1 rounded border border-rose-200 text-[10px]">
+                  <i class="fa-solid fa-rotate-left mr-1"></i> Revert / Delete
+                </button>
+              </div>
             ` : `
               <span class="text-[10px] text-slate-400">Admin Only</span>
             `}
@@ -1436,6 +1459,62 @@
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    /* REVERT AND DELETE ENTRY FEATURE (ADMIN ONLY) */
+    function revertAndDeleteEntry(refId) {
+      if (appState.role !== 'owner') {
+        return alert("Access Denied: Revert / Delete operations are restricted to Admin / Store Owner mode.");
+      }
+
+      const confirmAction = confirm(`Are you sure you want to REVERT and DELETE entry ${refId}?\nThis will adjust cash denomination stock back to its previous state.`);
+      if (!confirmAction) return;
+
+      const idx = appState.transactions.findIndex(t => t.refId === refId);
+      if (idx === -1) return alert("Transaction record not found.");
+
+      const txn = appState.transactions[idx];
+      const branch = txn.branch;
+
+      // Revert stock adjustments
+      if (txn.denoms) {
+        for (let k in txn.denoms) {
+          const qty = txn.denoms[k];
+          if (txn.amount > 0) {
+            // Original entry added cash, so revert by subtracting
+            appState.branches[branch][k] = Math.max(0, (appState.branches[branch][k] || 0) - qty);
+          } else {
+            // Original entry deducted cash, so revert by adding back
+            appState.branches[branch][k] = (appState.branches[branch][k] || 0) + qty;
+          }
+        }
+      }
+
+      // Remove from main transaction ledger
+      appState.transactions.splice(idx, 1);
+
+      // Clean up linked transfer records if applicable
+      let baseRefId = refId.replace('-OUT', '').replace('-IN', '');
+      const trfIdx = appState.transfers.findIndex(t => t.refId === baseRefId || t.refId === refId);
+      if (trfIdx !== -1) {
+        appState.transfers.splice(trfIdx, 1);
+      }
+
+      // Clean up vendor payment log if applicable
+      const venIdx = appState.vendorPayments.findIndex(v => v.refId === refId);
+      if (venIdx !== -1) {
+        appState.vendorPayments.splice(venIdx, 1);
+      }
+
+      // Clean up soiled log if applicable
+      const sldIdx = appState.soiledNotes.findIndex(s => s.id === refId);
+      if (sldIdx !== -1) {
+        appState.soiledNotes.splice(sldIdx, 1);
+      }
+
+      saveState();
+      renderAllViews();
+      alert(`Entry ${refId} successfully reverted and deleted.`);
     }
 
     function viewTransactionDetails(refId, itemType) {
@@ -1498,6 +1577,7 @@
         html = `
           <div class="bg-slate-50 p-3 rounded-lg border space-y-1">
             <div class="flex justify-between"><span>Date:</span> <strong>${v.date}</strong></div>
+            <div class="flex justify-between"><span>Category:</span> <strong>${v.category || 'Vendor Change Received'}</strong></div>
             <div class="flex justify-between"><span>Mobile:</span> <strong>${v.vendorMobile}</strong></div>
             <div class="flex justify-between"><span>Receiving Store:</span> <strong>${v.branch}</strong></div>
             <div class="flex justify-between"><span>Payment Method:</span> <strong>${v.paymentMethod}</strong></div>
@@ -1895,7 +1975,7 @@
         printableArea.innerHTML = `
           <div style="width: 280px; margin: 0 auto; font-family: monospace; font-size: 11px; text-align: center; border: 1px dashed #000; padding: 12px;">
             <h2 style="font-size: 14px; font-weight: bold; margin: 0;">LALITHA NATURALS</h2>
-            <p style="font-size: 10px; margin: 2px 0 8px 0;">Cash Change System Receipt</p>
+            <p style="font-size: 10px; margin: 2px 0 8px 0;">Cash Change System Receipt (v1.1)</p>
             <hr style="border-top: 1px dashed #000; margin: 6px 0;">
             <div style="text-align: left;">
               <div><strong>Ref ID:</strong> ${txn.refId}</div>
@@ -1924,7 +2004,7 @@
             <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 12px;">
               <div>
                 <h1 style="font-size: 20px; font-weight: bold; color: #064e3b; margin: 0;">LALITHA NATURALS</h1>
-                <p style="font-size: 12px; color: #555; margin: 0;">Internal Cash Change Voucher</p>
+                <p style="font-size: 12px; color: #555; margin: 0;">Internal Cash Change Voucher (v1.1)</p>
               </div>
               <div style="text-align: right;">
                 <h2 style="font-size: 16px; font-weight: bold; margin: 0;">VOUCHER #${txn.refId}</h2>
@@ -1961,6 +2041,10 @@
     }
 
     function openEditEntryModal(refId) {
+      if (appState.role !== 'owner') {
+        return alert("Access Denied: Editing entries is allowed for Admin only.");
+      }
+
       const txn = appState.transactions.find(t => t.refId === refId);
       if (!txn) return;
 
@@ -1975,6 +2059,8 @@
 
     function saveEditedEntry(e) {
       e.preventDefault();
+      if (appState.role !== 'owner') return alert("Access Denied.");
+
       const refId = document.getElementById('editTxnRef').value;
       const txn = appState.transactions.find(t => t.refId === refId);
       if (!txn) return;
@@ -1990,7 +2076,7 @@
       alert("Entry updated successfully!");
     }
 
-    /* HANDLE CATEGORY SELECTION IN RECORD CASH IN / OUT MODAL (WITH VENDOR CHANGE DIRECT ROUTING) */
+    /* HANDLE CATEGORY SELECTION IN RECORD CASH IN / OUT MODAL */
     function handleCategorySelectionChange(val) {
       if (val === "Vendor Change") {
         closeModal('cashModal');
@@ -2116,8 +2202,8 @@
 
       const catSelect = document.getElementById('cashCategory');
       catSelect.innerHTML = type === 'credit' ? `
-        <option value="Vendor Change" selected>Vendor Change</option>
         <option value="Billing Cash Drawer">Billing Cash Drawer</option>
+        <option value="Vendor Change">Vendor Change</option>
         <option value="Damage Cash Entry">Damage Cash Entry</option>
         <option value="Customer Return Balance Adjustment">Customer Return Balance Adjustment</option>
         <option value="Daily Store Float Addition">Daily Store Float Addition</option>
@@ -2137,13 +2223,7 @@
       document.getElementById('cashRemarks').value = '';
       
       updateCashModalStoreStock();
-
-      // IF RECORD CASH IN OPENED WITH DEFAULT "Vendor Change", IMMEDIATELY LAUNCH VENDOR CHANGE ENTRY MODAL
-      if (type === 'credit') {
-        openVendorModal();
-      } else {
-        document.getElementById('cashModal').classList.remove('hidden');
-      }
+      document.getElementById('cashModal').classList.remove('hidden');
     }
 
     function updateCashModalStoreStock() {
@@ -2235,6 +2315,7 @@
       document.getElementById('venMobile').value = '';
       document.getElementById('venPayRef').value = '';
       document.getElementById('venPaidAmount').value = '';
+      document.getElementById('venCategory').value = 'Vendor Change Received';
       
       updateVendorModalStoreStock();
       document.getElementById('vendorModal').classList.remove('hidden');
@@ -2313,6 +2394,7 @@
 
     function handleVendorSubmit(e) {
       e.preventDefault();
+      const cat = document.getElementById('venCategory').value;
       const vName = document.getElementById('venName').value;
       const vMobile = document.getElementById('venMobile').value;
       const branch = document.getElementById('venBranch').value;
@@ -2331,8 +2413,8 @@
 
       for (let k in deltaObj) appState.branches[branch][k] = (appState.branches[branch][k] || 0) + deltaObj[k];
 
-      appState.vendorPayments.push({ refId: ref, date: new Date().toLocaleString(), vendorName: vName, vendorMobile: vMobile, branch, cashValueReceived: totalCashReceived, paymentMethod: method, payRef, paidAmount: paidAmt, denoms: deltaObj });
-      appState.transactions.push({ refId: ref, date: new Date().toLocaleString(), type: 'VENDOR_PROCURE', branch, category: `Vendor Change (${vName})`, amount: totalCashReceived, handler: `Paid via ${method}`, remarks: `Ref: ${payRef}`, denoms: deltaObj });
+      appState.vendorPayments.push({ refId: ref, date: new Date().toLocaleString(), category: cat, vendorName: vName, vendorMobile: vMobile, branch, cashValueReceived: totalCashReceived, paymentMethod: method, payRef, paidAmount: paidAmt, denoms: deltaObj });
+      appState.transactions.push({ refId: ref, date: new Date().toLocaleString(), type: 'VENDOR_PROCURE', branch, category: `${cat} (${vName})`, amount: totalCashReceived, handler: `Paid via ${method}`, remarks: `Ref: ${payRef}`, denoms: deltaObj });
 
       saveState(); renderAllViews(); closeModal('vendorModal');
     }
