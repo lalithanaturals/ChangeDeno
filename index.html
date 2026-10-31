@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lalitha Naturals – Cash Change Management System v1.3</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -279,7 +278,7 @@
         </div>
       </div>
 
-      <!-- TAB 2: MINIMUM DENOMINATIONS MANAGER (PER STORE TARGETS) -->
+      <!-- TAB 2: MINIMUM DENOMINATIONS MANAGER -->
       <div id="tab-min-requirements" class="hidden space-y-6">
         <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -328,7 +327,6 @@
             </div>
             
             <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-              <!-- ERASE ALL SYSTEM DATA BUTTON (ADMIN ONLY) -->
               <button id="eraseAllDataBtn" onclick="promptEraseAllData()" class="hidden bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-sm flex items-center space-x-1">
                 <i class="fa-solid fa-trash-can mr-1"></i> Erase All System Data
               </button>
@@ -480,7 +478,6 @@
           </button>
         </div>
 
-        <!-- PENDING APPROVAL REQUESTS INBOX -->
         <div class="bg-amber-50 rounded-xl border border-amber-200 shadow-sm overflow-hidden space-y-3 p-4">
           <div class="flex items-center space-x-2 text-amber-900">
             <i class="fa-solid fa-envelope-open-text text-amber-600"></i>
@@ -506,7 +503,6 @@
           </div>
         </div>
 
-        <!-- COMPLETED TRANSFERS LOG -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="p-4 bg-slate-50 border-b font-bold text-xs text-slate-600 uppercase tracking-wider">Completed / Transfer History Log</div>
           <div class="overflow-x-auto">
@@ -571,87 +567,44 @@
       </div>
 
       <!-- TAB 8: DAMAGED CASH VAULT -->
-      <div id="tab-soiled" class="hidden space-y-6">
-        <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h2 class="text-base sm:text-lg font-bold text-slate-800">Damaged Notes Vault</h2>
-            <p class="text-xs text-slate-500">Store damaged/soiled cash notes separately</p>
-          </div>
-          <button onclick="openSoiledModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm flex items-center space-x-2">
-            <i class="fa-solid fa-note-sticky"></i>
-            <span>Log Damaged Note</span>
-          </button>
-        </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div class="p-4 bg-slate-50 border-b font-bold text-xs text-slate-600 uppercase tracking-wider">Damaged Cash Inventory Log</div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs font-mono min-w-[650px]">
-              <thead class="bg-slate-100 text-slate-600 font-bold border-b font-sans">
-                <tr>
-                  <th class="p-3">ENTRY ID</th>
-                  <th class="p-3">DATE RECORDED</th>
-                  <th class="p-3">STORE</th>
-                  <th class="p-3">DENOMINATION</th>
-                  <th class="p-3 text-center">QTY</th>
-                  <th class="p-3 text-right">TOTAL VALUE</th>
-                  <th class="p-3">REASON / SOURCE</th>
-                  <th class="p-3 text-center font-sans">VIEW DETAILS</th>
-                  <th class="p-3 text-center">STATUS</th>
-                </tr>
-              </thead>
-              <tbody id="soiled-history-body" class="divide-y divide-slate-100">
-                <tr><td colspan="9" class="p-4 text-center text-slate-400 font-sans">No damaged notes recorded in vault.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+  <div id="tab-soiled" class="hidden space-y-6">
+    <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h2 class="text-base sm:text-lg font-bold text-slate-800">Damaged Notes Vault</h2>
+        <p class="text-xs text-slate-500">Store damaged/soiled cash notes separately</p>
       </div>
-
-    </main>
-  </div>
-
-  <!-- PRINT RECEIPT TEMPLATE CONTAINER -->
-  <div id="printableArea" class="hidden p-8 bg-white max-w-2xl mx-auto font-mono text-black"></div>
-
-  <!-- MODAL: SUCCESSFUL ENTRY & DOWNLOAD JPEG RECEIPT -->
-  <div id="receiptSuccessModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-4 sm:p-6 space-y-4">
-      <div class="flex items-center space-x-3 text-emerald-700 border-b pb-3">
-        <i class="fa-solid fa-circle-check text-2xl"></i>
-        <div>
-          <h3 class="font-bold text-base text-slate-900">Entry Saved Successfully</h3>
-          <p class="text-xs text-slate-500">Download or view your entry receipt below</p>
-        </div>
-      </div>
-
-      <!-- RECEIPT RENDER CONTAINER FOR JPEG DOWNLOAD -->
-      <div id="receiptCardToDownload" class="bg-white p-4 rounded-xl border border-slate-200 text-xs space-y-3 font-mono"></div>
-
-      <div class="flex flex-col sm:flex-row justify-end gap-2 pt-2 border-t">
-        <button onclick="closeModal('receiptSuccessModal')" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-lg text-xs">Close</button>
-        <button onclick="downloadReceiptAsJpeg()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow flex items-center justify-center">
-          <i class="fa-solid fa-file-image mr-1.5"></i> Download JPEG Receipt
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="openBankDepositModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm flex items-center space-x-2">
+          <i class="fa-solid fa-building-columns"></i>
+          <span>Deposit in Bank</span>
+        </button>
+        <button onclick="openSoiledModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm flex items-center space-x-2">
+          <i class="fa-solid fa-note-sticky"></i>
+          <span>Log Damaged Note</span>
         </button>
       </div>
     </div>
-  </div>
 
-  <!-- MODAL: TRANSACTION DETAILS VIEW -->
-  <div id="viewTxnModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-4 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b pb-3">
-        <div>
-          <h3 class="font-bold text-slate-900 text-base" id="viewTxnTitle">Transaction Details</h3>
-          <p class="text-xs text-slate-500" id="viewTxnSub">Ref Details & Breakdown</p>
-        </div>
-        <button onclick="closeModal('viewTxnModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-
-      <div id="viewTxnContent" class="space-y-3 font-mono text-xs"></div>
-
-      <div class="flex justify-end space-x-2 pt-3 border-t">
-        <button onclick="closeModal('viewTxnModal')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-2 rounded-lg text-xs">Close</button>
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-4 bg-slate-50 border-b font-bold text-xs text-slate-600 uppercase tracking-wider">Damaged Cash Inventory Log</div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono min-w-[650px]">
+          <thead class="bg-slate-100 text-slate-600 font-bold border-b font-sans">
+            <tr>
+              <th class="p-3">ENTRY ID</th>
+              <th class="p-3">DATE RECORDED</th>
+              <th class="p-3">STORE</th>
+              <th class="p-3">DENOMINATIONS</th>
+              <th class="p-3 text-right">TOTAL VALUE</th>
+              <th class="p-3">REASON / SOURCE</th>
+              <th class="p-3 text-center font-sans">VIEW DETAILS</th>
+              <th class="p-3 text-center">STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="soiled-history-body" class="divide-y divide-slate-100">
+            <tr><td colspan="8" class="p-4 text-center text-slate-400 font-sans">No damaged notes recorded in vault.</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -674,13 +627,30 @@
     </div>
   </div>
 
+  <!-- MODAL: GENERIC VIEW DETAILS POPUP -->
+  <div id="viewTxnModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-4 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h3 id="viewTxnTitle" class="font-bold text-slate-900 text-sm">Entry Details</h3>
+          <p id="viewTxnSub" class="text-xs text-slate-500 font-mono"></p>
+        </div>
+        <button onclick="closeModal('viewTxnModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div id="viewTxnContent" class="space-y-3 text-xs font-mono"></div>
+      <div class="flex justify-end pt-2 border-t">
+        <button onclick="closeModal('viewTxnModal')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-2 rounded-lg text-xs shadow">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: CONFIRMATION DIALOGUE BOX -->
   <div id="confirmModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-4 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center space-x-3 text-emerald-700 border-b pb-3">
         <i class="fa-solid fa-circle-check text-2xl"></i>
         <div>
-          <h3 class="font-bold text-base text-slate-900">Confirm Cash Entry Submission</h3>
+          <h3 class="font-bold text-base text-slate-900" id="confirmModalHeading">Confirm Entry Submission</h3>
           <p class="text-xs text-slate-500">Please review entry details</p>
         </div>
       </div>
@@ -756,7 +726,7 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Reason / Category <span class="text-red-500">*</span></label>
-            <select id="cashCategory" onchange="handleCategorySelectionChange(this.value)" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required></select>
+            <select id="cashCategory" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required></select>
           </div>
         </div>
 
@@ -764,40 +734,40 @@
           <label class="block text-xs font-bold text-slate-700 mb-2">Denomination Count:</label>
           <div class="grid grid-cols-3 gap-2 sm:gap-3 font-mono">
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹500:</label><span id="cash-avail-n500" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">500:</label><span id="cash-avail-n500" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="denom-n500" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-n200')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹200:</label><span id="cash-avail-n200" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="denom-n200" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-n100')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">200:</label><span id="cash-avail-n200" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="denom-n200" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-n100', 'denom-n500')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹100:</label><span id="cash-avail-n100" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="denom-n100" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-n50')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">100:</label><span id="cash-avail-n100" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="denom-n100" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-n50', 'denom-n200')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹50:</label><span id="cash-avail-n50" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="denom-n50" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-n20')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">50:</label><span id="cash-avail-n50" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="denom-n50" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-n20', 'denom-n100')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹20:</label><span id="cash-avail-n20" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="denom-n20" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-n10')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">20:</label><span id="cash-avail-n20" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="denom-n20" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-n10', 'denom-n50')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹10:</label><span id="cash-avail-n10" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="denom-n10" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-c5')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">10:</label><span id="cash-avail-n10" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="denom-n10" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-c5', 'denom-n20')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹5:</label><span id="cash-avail-c5" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="denom-c5" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-c2')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">5:</label><span id="cash-avail-c5" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="denom-c5" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-c2', 'denom-n10')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹2:</label><span id="cash-avail-c2" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="denom-c2" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-c1')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">2:</label><span id="cash-avail-c2" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="denom-c2" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'denom-c1', 'denom-c5')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹1:</label><span id="cash-avail-c1" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="denom-c1" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'cashHandler')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">1:</label><span id="cash-avail-c1" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="denom-c1" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcCashModalTotal()" onkeydown="handleEnterTab(event, 'cashHandler', 'denom-c2')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
           </div>
         </div>
@@ -838,7 +808,7 @@
         <h3 class="text-sm sm:text-base font-bold text-slate-900">Initiate Branch Transfer Request</h3>
         <button onclick="closeModal('transferModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
-      <form id="transferForm" onsubmit="handleTransferSubmit(event)" class="space-y-4">
+      <form id="transferForm" onsubmit="promptConfirmTransferSubmit(event)" class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <div class="flex justify-between items-center mb-1">
@@ -866,47 +836,47 @@
           </div>
           <div class="grid grid-cols-3 gap-2 sm:gap-3 font-mono">
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹500:</label><span id="trf-avail-n500" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">500:</label><span id="trf-avail-n500" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="trf-n500" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcTrfModalTotal()" onkeydown="handleEnterTab(event, 'trf-n200')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
               <span id="err-trf-n500" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Not avail</span>
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹200:</label><span id="trf-avail-n200" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">200:</label><span id="trf-avail-n200" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="trf-n200" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcTrfModalTotal()" onkeydown="handleEnterTab(event, 'trf-n100')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
               <span id="err-trf-n200" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Not avail</span>
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹100:</label><span id="trf-avail-n100" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">100:</label><span id="trf-avail-n100" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="trf-n100" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcTrfModalTotal()" onkeydown="handleEnterTab(event, 'trf-n50')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
               <span id="err-trf-n100" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Not avail</span>
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹50:</label><span id="trf-avail-n50" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">50:</label><span id="trf-avail-n50" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="trf-n50" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcTrfModalTotal()" onkeydown="handleEnterTab(event, 'trf-n20')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
               <span id="err-trf-n50" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Not avail</span>
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹20:</label><span id="trf-avail-n20" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">20:</label><span id="trf-avail-n20" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="trf-n20" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcTrfModalTotal()" onkeydown="handleEnterTab(event, 'trf-n10')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
               <span id="err-trf-n20" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Not avail</span>
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹10:</label><span id="trf-avail-n10" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">10:</label><span id="trf-avail-n10" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="trf-n10" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcTrfModalTotal()" onkeydown="handleEnterTab(event, 'trf-c5')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
               <span id="err-trf-n10" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Not avail</span>
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹5:</label><span id="trf-avail-c5" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">5:</label><span id="trf-avail-c5" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="trf-c5" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcTrfModalTotal()" onkeydown="handleEnterTab(event, 'trf-c2')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
               <span id="err-trf-c5" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Not avail</span>
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹2:</label><span id="trf-avail-c2" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">2:</label><span id="trf-avail-c2" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="trf-c2" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcTrfModalTotal()" onkeydown="handleEnterTab(event, 'trf-c1')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
               <span id="err-trf-c2" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Not avail</span>
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹1:</label><span id="trf-avail-c1" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">1:</label><span id="trf-avail-c1" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="trf-c1" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcTrfModalTotal()" onkeydown="handleEnterTab(event, 'trfHandler')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
               <span id="err-trf-c1" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Not avail</span>
             </div>
@@ -940,7 +910,7 @@
 
         <div class="flex justify-end space-x-2 pt-2 border-t">
           <button type="button" onclick="closeModal('transferModal')" class="bg-slate-100 text-slate-700 font-bold px-4 py-2 rounded-lg text-xs">Cancel</button>
-          <button id="trfSubmitBtn" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded-lg text-xs shadow">Send Request</button>
+          <button id="trfSubmitBtn" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded-lg text-xs shadow">Proceed to Submit</button>
         </div>
       </form>
     </div>
@@ -953,28 +923,15 @@
         <h3 class="text-sm sm:text-base font-bold text-slate-900">Record Vendor Cash Change Received</h3>
         <button onclick="closeModal('vendorModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
-      <form id="vendorForm" onsubmit="handleVendorSubmit(event)" class="space-y-4">
-        
-        <!-- Category / Reason Dropdown -->
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Reason / Category <span class="text-red-500">*</span></label>
-          <select id="venCategory" onchange="toggleVendorContactFields(this.value)" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required>
-            <option value="Vendor Change Received" selected>Vendor Change Received</option>
-            <option value="Emergency Change Procure">Emergency Change Procure</option>
-            <option value="Direct Cash Purchase">Direct Cash Purchase</option>
-            <option value="Other Vendor Adjustment">Other Vendor Adjustment</option>
-          </select>
-        </div>
-
-        <!-- Vendor Name & Mobile (Hidden if Reason is not Vendor Change Received) -->
+      <form id="vendorForm" onsubmit="promptConfirmVendorSubmit(event)" class="space-y-4">
         <div id="vendorContactRow" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Vendor Name <span class="text-red-500">*</span></label>
-            <input type="text" id="venName" placeholder="e.g. Sri Lakshmi Wholesale" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs">
+            <input type="text" id="venName" required placeholder="e.g. Sri Lakshmi Wholesale" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number <span class="text-red-500">*</span></label>
-            <input type="tel" id="venMobile" placeholder="10-digit number" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-mono">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number (Optional)</label>
+            <input type="tel" id="venMobile" placeholder="10-digit number" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-mono">
           </div>
         </div>
 
@@ -999,44 +956,49 @@
           </div>
         </div>
 
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Employee Name <span class="text-red-500">*</span></label>
+          <input type="text" id="venHandler" required placeholder="Staff Name" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs">
+        </div>
+
         <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200 space-y-2">
           <label class="block text-xs font-bold text-slate-700 mb-2">Change Cash Collected:</label>
           <div class="grid grid-cols-3 gap-2 sm:gap-3 font-mono">
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹500:</label><span id="ven-avail-n500" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">500:</label><span id="ven-avail-n500" class="text-[9px] text-slate-400">(0 avail)</span></div>
               <input type="number" id="ven-n500" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-n200')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹200:</label><span id="ven-avail-n200" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="ven-n200" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-n100')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">200:</label><span id="ven-avail-n200" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="ven-n200" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-n100', 'ven-n500')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹100:</label><span id="ven-avail-n100" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="ven-n100" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-n50')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">100:</label><span id="ven-avail-n100" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="ven-n100" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-n50', 'ven-n200')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹50:</label><span id="ven-avail-n50" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="ven-n50" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-n20')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">50:</label><span id="ven-avail-n50" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="ven-n50" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-n20', 'ven-n100')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹20:</label><span id="ven-avail-n20" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="ven-n20" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-n10')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">20:</label><span id="ven-avail-n20" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="ven-n20" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-n10', 'ven-n50')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹10:</label><span id="ven-avail-n10" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="ven-n10" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-c5')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">10:</label><span id="ven-avail-n10" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="ven-n10" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-c5', 'ven-n20')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹5:</label><span id="ven-avail-c5" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="ven-c5" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-c2')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">5:</label><span id="ven-avail-c5" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="ven-c5" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-c2', 'ven-n10')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹2:</label><span id="ven-avail-c2" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="ven-c2" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-c1')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">2:</label><span id="ven-avail-c2" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="ven-c2" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'ven-c1', 'ven-c5')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
             <div>
-              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">₹1:</label><span id="ven-avail-c1" class="text-[9px] text-slate-400">(0 avail)</span></div>
-              <input type="number" id="ven-c1" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'venPayRef')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">1:</label><span id="ven-avail-c1" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="ven-c1" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcVenModalTotal()" onkeydown="handleEnterTab(event, 'venRemarks', 'ven-c2')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
             </div>
           </div>
         </div>
@@ -1048,8 +1010,8 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Payment Ref ID <span class="text-red-500">*</span></label>
-            <input type="text" id="venPayRef" required placeholder="e.g. UPI-99201928" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-mono">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Remarks</label>
+            <input type="text" id="venRemarks" placeholder="Add optional remarks or details" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Paid Amount (₹) <span class="text-red-500">*</span></label>
@@ -1059,48 +1021,86 @@
 
         <div class="flex justify-end space-x-2 pt-2 border-t">
           <button type="button" onclick="closeModal('vendorModal')" class="bg-slate-100 text-slate-700 font-bold px-4 py-2 rounded-lg text-xs">Cancel</button>
-          <button type="submit" class="bg-purple-700 hover:bg-purple-800 text-white font-bold px-5 py-2 rounded-lg text-xs shadow">Submit Entry</button>
+          <button type="submit" class="bg-purple-700 hover:bg-purple-800 text-white font-bold px-5 py-2 rounded-lg text-xs shadow">Proceed to Submit</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: DAMAGED CASH -->
+  <!-- MODAL: DAMAGED CASH LOG -->
   <div id="soiledModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-4 sm:p-6 space-y-4 sm:space-y-5 my-4 sm:my-8 max-h-[92vh] overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-xl max-w-xl w-full p-4 sm:p-6 space-y-4 sm:space-y-5 my-4 sm:my-8 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-sm sm:text-base font-bold text-slate-900">Log Damaged Note</h3>
+        <h3 class="text-sm sm:text-base font-bold text-slate-900">Log Damaged Notes</h3>
         <button onclick="closeModal('soiledModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
 
-      <form id="soiledForm" onsubmit="handleSoiledSubmit(event)" class="space-y-4">
+      <form id="soiledForm" onsubmit="promptConfirmSoiledSubmit(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Store <span class="text-red-500">*</span></label>
-          <select id="soiledBranch" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required>
+          <div class="flex justify-between items-center mb-1">
+            <label class="block text-xs font-bold text-slate-700">Store <span class="text-red-500">*</span></label>
+            <span id="soiledStoreBalBadge" class="text-[10px] font-bold font-mono text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Usable: ₹0</span>
+          </div>
+          <select id="soiledBranch" onchange="updateSoiledModalStoreStock()" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required>
             <option value="gajuwaka">Gajuwaka</option>
             <option value="kurmannapalem">Kurmannapalem</option>
           </select>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Denomination <span class="text-red-500">*</span></label>
-            <select id="soiledDenom" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required>
-              <option value="n500">₹500</option>
-              <option value="n200">₹200</option>
-              <option value="n100">₹100</option>
-              <option value="n50">₹50</option>
-              <option value="n20">₹20</option>
-              <option value="n10">₹10</option>
-              <option value="c5">₹5</option>
-              <option value="c2">₹2</option>
-              <option value="c1">₹1</option>
-            </select>
+        <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200 space-y-2">
+          <label class="block text-xs font-bold text-slate-700 mb-2">Select Damaged Notes Denominations:</label>
+          <div class="grid grid-cols-3 gap-2 sm:gap-3 font-mono">
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">500:</label><span id="soiled-avail-n500" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="soiled-n500" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcSoiledModalTotal()" onkeydown="handleEnterTab(event, 'soiled-n200')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-soiled-n500" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds stock</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">200:</label><span id="soiled-avail-n200" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="soiled-n200" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcSoiledModalTotal()" onkeydown="handleEnterTab(event, 'soiled-n100')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-soiled-n200" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds stock</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">100:</label><span id="soiled-avail-n100" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="soiled-n100" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcSoiledModalTotal()" onkeydown="handleEnterTab(event, 'soiled-n50')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-soiled-n100" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds stock</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">50:</label><span id="soiled-avail-n50" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="soiled-n50" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcSoiledModalTotal()" onkeydown="handleEnterTab(event, 'soiled-n20')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-soiled-n50" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds stock</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">20:</label><span id="soiled-avail-n20" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="soiled-n20" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcSoiledModalTotal()" onkeydown="handleEnterTab(event, 'soiled-n10')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-soiled-n20" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds stock</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">10:</label><span id="soiled-avail-n10" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="soiled-n10" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcSoiledModalTotal()" onkeydown="handleEnterTab(event, 'soiled-c5')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-soiled-n10" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds stock</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">5:</label><span id="soiled-avail-c5" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="soiled-c5" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcSoiledModalTotal()" onkeydown="handleEnterTab(event, 'soiled-c2')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-soiled-c5" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds stock</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">2:</label><span id="soiled-avail-c2" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="soiled-c2" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcSoiledModalTotal()" onkeydown="handleEnterTab(event, 'soiled-c1')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-soiled-c2" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds stock</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">1:</label><span id="soiled-avail-c1" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="soiled-c1" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcSoiledModalTotal()" onkeydown="handleEnterTab(event, 'soiledSource')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-soiled-c1" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds stock</span>
+            </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Quantity <span class="text-red-500">*</span></label>
-            <input type="number" id="soiledQty" min="1" required value="1" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-mono font-bold text-center">
-          </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl flex justify-between items-center font-mono">
+          <span class="text-xs font-bold text-amber-900 font-sans">Total Damaged Amount:</span>
+          <span class="text-lg sm:text-xl font-black text-amber-700" id="soiledModalCalculated">₹0</span>
         </div>
 
         <div>
@@ -1110,26 +1110,140 @@
 
         <div class="flex justify-end space-x-2 pt-2 border-t">
           <button type="button" onclick="closeModal('soiledModal')" class="bg-slate-100 text-slate-700 font-bold px-4 py-2 rounded-lg text-xs">Cancel</button>
-          <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-5 py-2 rounded-lg text-xs shadow">Move to Vault</button>
+          <button id="soiledSubmitBtn" type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-5 py-2 rounded-lg text-xs shadow">Proceed to Submit</button>
         </div>
       </form>
     </div>
   </div>
+
+  <!-- MODAL: BANK DEPOSIT FOR DAMAGED NOTES -->
+  <div id="bankDepositModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-xl max-w-xl w-full p-4 sm:p-6 space-y-4 sm:space-y-5 my-4 sm:my-8 max-h-[92vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-sm sm:text-base font-bold text-slate-900">Deposit Damaged Notes to Bank</h3>
+        <button onclick="closeModal('bankDepositModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="bankDepositForm" onsubmit="promptConfirmBankDepositSubmit(event)" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-xs font-bold text-slate-700">Store Vault Location <span class="text-red-500">*</span></label>
+              <span id="bankDepVaultBalBadge" class="text-[10px] font-bold font-mono text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Vault: ₹0</span>
+            </div>
+            <select id="bankDepBranch" onchange="updateBankDepositModalVaultStock()" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required>
+              <option value="gajuwaka">Gajuwaka</option>
+              <option value="kurmannapalem">Kurmannapalem</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Target Bank Account <span class="text-red-500">*</span></label>
+            <select id="bankDepAccount" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs font-medium" required>
+              <option value="AXIS">AXIS</option>
+              <option value="HDFC">HDFC</option>
+              <option value="SBI Bank Account">SBI Bank Account</option>
+              <option value="UCO CC">UCO CC</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200 space-y-2">
+          <label class="block text-xs font-bold text-slate-700 mb-2">Select Damaged Notes Denominations to Deposit:</label>
+          <div class="grid grid-cols-3 gap-2 sm:gap-3 font-mono">
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">500:</label><span id="bank-avail-n500" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="bank-n500" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcBankDepModalTotal()" onkeydown="handleEnterTab(event, 'bank-n200')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-bank-n500" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds vault</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">200:</label><span id="bank-avail-n200" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="bank-n200" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcBankDepModalTotal()" onkeydown="handleEnterTab(event, 'bank-n100')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-bank-n200" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds vault</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">100:</label><span id="bank-avail-n100" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="bank-n100" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcBankDepModalTotal()" onkeydown="handleEnterTab(event, 'bank-n50')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-bank-n100" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds vault</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">50:</label><span id="bank-avail-n50" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="bank-n50" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcBankDepModalTotal()" onkeydown="handleEnterTab(event, 'bank-n20')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-bank-n50" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds vault</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">20:</label><span id="bank-avail-n20" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="bank-n20" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcBankDepModalTotal()" onkeydown="handleEnterTab(event, 'bank-n10')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-bank-n20" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds vault</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">10:</label><span id="bank-avail-n10" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="bank-n10" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcBankDepModalTotal()" onkeydown="handleEnterTab(event, 'bank-c5')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-bank-n10" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds vault</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">5:</label><span id="bank-avail-c5" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="bank-c5" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcBankDepModalTotal()" onkeydown="handleEnterTab(event, 'bank-c2')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-bank-c5" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds vault</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">2:</label><span id="bank-avail-c2" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="bank-c2" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcBankDepModalTotal()" onkeydown="handleEnterTab(event, 'bank-c1')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-bank-c2" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds vault</span>
+            </div>
+            <div>
+              <div class="flex justify-between"><label class="text-[10px] sm:text-[11px] font-semibold text-slate-600 font-sans">1:</label><span id="bank-avail-c1" class="text-[9px] text-slate-400">(0 avail)</span></div>
+              <input type="number" id="bank-c1" min="0" value="0" onfocus="clearZeroOnFocus(this)" onblur="restoreZeroOnBlur(this)" oninput="calcBankDepModalTotal()" onkeydown="handleEnterTab(event, 'bankDepHandler')" class="w-full border rounded p-1.5 text-xs text-center font-bold">
+              <span id="err-bank-c1" class="text-[9px] text-red-600 font-bold font-sans block hidden mt-0.5">Exceeds vault</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl flex justify-between items-center font-mono">
+          <span class="text-xs font-bold text-emerald-900 font-sans">Total Bank Deposit Value:</span>
+          <span class="text-lg sm:text-xl font-black text-emerald-700" id="bankDepModalCalculated">₹0</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Employee Name <span class="text-red-500">*</span></label>
+            <input type="text" id="bankDepHandler" required placeholder="Staff Name" class="w-full border-2 border-red-500 rounded-lg p-2 text-xs">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Bank Deposit Slip / Ref ID</label>
+            <input type="text" id="bankDepRef" placeholder="e.g. SLIP-9921" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Remarks / Note</label>
+          <input type="text" id="bankDepRemarks" placeholder="Bank Branch or Deposit voucher notes" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+        </div>
+
+        <div class="flex justify-end space-x-2 pt-2 border-t">
+          <button type="button" onclick="closeModal('bankDepositModal')" class="bg-slate-100 text-slate-700 font-bold px-4 py-2 rounded-lg text-xs">Cancel</button>
+          <button id="bankDepSubmitBtn" type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2 rounded-lg text-xs shadow">Proceed to Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- HIDDEN PRINT AREA -->
+  <div id="printableArea" class="hidden"></div>
 
   <!-- JAVASCRIPT APP CORE -->
   <script>
     const APP_VERSION = "1.3";
 
     const DENOM_CONFIG = [
-      { key: 'n500', label: '₹500', val: 500 },
-      { key: 'n200', label: '₹200', val: 200 },
-      { key: 'n100', label: '₹100', val: 100 },
-      { key: 'n50',  label: '₹50',  val: 50  },
-      { key: 'n20',  label: '₹20',  val: 20  },
-      { key: 'n10',  label: '₹10',  val: 10  },
-      { key: 'c5',   label: '₹5',   val: 5   },
-      { key: 'c2',   label: '₹2',   val: 2   },
-      { key: 'c1',   label: '₹1',   val: 1   }
+      { key: 'n500', label: '500', val: 500 },
+      { key: 'n200', label: '200', val: 200 },
+      { key: 'n100', label: '100', val: 100 },
+      { key: 'n50',  label: '50',  val: 50  },
+      { key: 'n20',  label: '20',  val: 20  },
+      { key: 'n10',  label: '10',  val: 10  },
+      { key: 'c5',   label: '5',   val: 5   },
+      { key: 'c2',   label: '2',   val: 2   },
+      { key: 'c1',   label: '1',   val: 1   }
     ];
 
     const ADMIN_PIN = "1234";
@@ -1154,7 +1268,7 @@
 
     let appState = JSON.parse(JSON.stringify(DEFAULT_DATA));
     let pendingSubmission = null;
-    let activeReceiptForDownload = null;
+    let activeModalToReopen = null;
 
     document.addEventListener('DOMContentLoaded', () => {
       loadStateFromStorage();
@@ -1230,7 +1344,6 @@
       document.getElementById('roleSelect').value = appState.role;
     }
 
-    /* ERASE ALL SYSTEM DATA FUNCTION (ADMIN ONLY) */
     function promptEraseAllData() {
       if (appState.role !== 'owner') return alert("Access Denied: Admin only.");
       const confirmFirst = confirm("WARNING: Are you sure you want to ERASE ALL SYSTEM DATA?\nAll transactions, transfers, vendor records, soiled vault items, and denomination stocks will be permanently wiped out!");
@@ -1255,85 +1368,6 @@
       }
     }
 
-    /* SHOW SUCCESS RECEIPT MODAL & TRIGGER JPEG GENERATION */
-    function showEntrySuccessModal(refId, category, store, amount, handler, remarks, denomsObj) {
-      activeReceiptForDownload = { refId, category, store, amount, handler, remarks, denomsObj, date: getActiveFormattedDate() };
-
-      let denomRows = '';
-      if (denomsObj) {
-        for (let k in denomsObj) {
-          const dObj = DENOM_CONFIG.find(d => d.key === k);
-          if (dObj && denomsObj[k] > 0) {
-            denomRows += `
-              <div class="flex justify-between py-0.5 border-b border-slate-100">
-                <span>${dObj.label} × ${denomsObj[k]} pcs</span>
-                <span class="font-bold">₹${(denomsObj[k] * dObj.val).toLocaleString('en-IN')}</span>
-              </div>
-            `;
-          }
-        }
-      }
-
-      const card = document.getElementById('receiptCardToDownload');
-      card.innerHTML = `
-        <div class="text-center border-b pb-2">
-          <h2 class="text-base font-black text-emerald-950 uppercase">Lalitha Naturals</h2>
-          <p class="text-[10px] text-slate-500">Cash Entry Receipt (v1.3)</p>
-        </div>
-        <div class="space-y-1 text-[11px]">
-          <div class="flex justify-between"><span>Ref ID:</span><strong class="font-bold">${refId}</strong></div>
-          <div class="flex justify-between"><span>Date:</span><span>${activeReceiptForDownload.date}</span></div>
-          <div class="flex justify-between"><span>Category:</span><span>${category}</span></div>
-          <div class="flex justify-between"><span>Store:</span><span class="capitalize font-semibold">${store}</span></div>
-          <div class="flex justify-between"><span>Employee:</span><span>${handler}</span></div>
-        </div>
-        <div class="pt-2 border-t">
-          <div class="font-bold text-[10px] text-slate-400 uppercase mb-1">Denominations:</div>
-          ${denomRows || '<div class="text-slate-400">N/A</div>'}
-        </div>
-        <div class="pt-2 border-t flex justify-between items-center text-sm font-bold">
-          <span>Total Amount:</span>
-          <span class="text-emerald-700 font-mono text-base">₹${Math.abs(amount).toLocaleString('en-IN')}</span>
-        </div>
-      `;
-
-      document.getElementById('receiptSuccessModal').classList.remove('hidden');
-    }
-
-    /* DOWNLOAD RECEIPT CARD AS JPEG IMAGE */
-    function downloadReceiptAsJpeg() {
-      const card = document.getElementById('receiptCardToDownload');
-      if (!card || !activeReceiptForDownload) return;
-
-      html2canvas(card, { scale: 2 }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Receipt_${activeReceiptForDownload.refId}.jpg`;
-        link.href = canvas.toDataURL('image/jpeg', 0.95);
-        link.click();
-      }).catch(err => {
-        console.error("Image generation failed", err);
-        alert("Receipt download failed. You can use print options instead.");
-      });
-    }
-
-    /* CONDITIONAL FIELD VISIBILITY IN VENDOR MODAL */
-    function toggleVendorContactFields(categoryVal) {
-      const contactRow = document.getElementById('vendorContactRow');
-      const venName = document.getElementById('venName');
-      const venMobile = document.getElementById('venMobile');
-
-      if (categoryVal === 'Vendor Change Received') {
-        contactRow.classList.remove('hidden');
-        venName.setAttribute('required', 'true');
-        venMobile.setAttribute('required', 'true');
-      } else {
-        contactRow.classList.add('hidden');
-        venName.removeAttribute('required');
-        venMobile.removeAttribute('required');
-      }
-    }
-
-    /* NAVIGATION TAB SWITCHER */
     function switchTab(tabId) {
       const tabs = ['dashboard', 'all-entries', 'denominations', 'min-requirements', 'branches', 'transfers', 'vendors', 'soiled'];
       tabs.forEach(t => {
@@ -1400,7 +1434,6 @@
       document.getElementById('dash-kurmannapalem-large').innerText = `₹${calcGroup('kurmannapalem', ['n100','n200','n500']).toLocaleString('en-IN')}`;
     }
 
-    /* RENDER MINIMUM DENOMINATIONS MANAGER WITH SEPARATE STORE INPUTS */
     function renderMinRequirementsTab() {
       const tbody = document.getElementById('min-req-tbody');
       const badge = document.getElementById('minReqAdminBadge');
@@ -1431,7 +1464,7 @@
 
         tbody.innerHTML += `
           <tr class="hover:bg-slate-50 border-b border-slate-200">
-            <td class="p-3 font-bold font-sans text-slate-900 border-r border-slate-200">${d.label}</td>
+            <td class="p-3 font-bold font-sans text-slate-900 border-r border-slate-200">₹${d.label}</td>
             <td class="p-3 text-center bg-emerald-50/40 text-slate-700 font-mono">
               <span class="font-bold text-emerald-800">${gQty} pcs</span>
               <span class="text-[10px] text-slate-500 block">(₹${gVal.toLocaleString('en-IN')})</span>
@@ -1559,22 +1592,13 @@
             `}
           </td>
           <td class="p-3 text-center space-x-1 font-sans">
-            <button onclick="triggerJpegDownloadFromList('${t.refId}')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-2 py-1 rounded text-[10px] font-bold">
-              <i class="fa-solid fa-file-image mr-1"></i> JPEG
-            </button>
             <button onclick="printReceipt('${t.refId}', 'thermal')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-2 py-1 rounded text-[10px] font-bold border border-slate-300">
-              <i class="fa-solid fa-print mr-1"></i> Thermal
+              <i class="fa-solid fa-print mr-1"></i> Thermal Print
             </button>
           </td>
         `;
         tbody.appendChild(tr);
       });
-    }
-
-    function triggerJpegDownloadFromList(refId) {
-      const txn = appState.transactions.find(t => t.refId === refId);
-      if (!txn) return;
-      showEntrySuccessModal(txn.refId, txn.category, txn.branch, txn.amount, txn.handler, txn.remarks, txn.denoms);
     }
 
     function revertAndDeleteEntry(refId) {
@@ -1634,7 +1658,7 @@
         if (txn.denoms) {
           for (let k in txn.denoms) {
             const dObj = DENOM_CONFIG.find(d => d.key === k);
-            denomText += `<div class="flex justify-between"><span>${dObj.label}:</span> <strong>${txn.denoms[k]} pcs (₹${txn.denoms[k] * dObj.val})</strong></div>`;
+            denomText += `<div class="flex justify-between"><span>₹${dObj.label}:</span> <strong>${txn.denoms[k]} pcs (₹${txn.denoms[k] * dObj.val})</strong></div>`;
           }
         }
 
@@ -1655,7 +1679,7 @@
         const trf = appState.transfers.find(t => t.refId === refId);
         if (!trf) return;
         title.innerText = `Transfer ${trf.refId}`;
-        sub.innerText = `${trf.fromBranch} → ${trf.toBranch}`;
+        sub.innerText = `${trf.fromBranch} ➔ ${trf.toBranch}`;
 
         html = `
           <div class="bg-slate-50 p-3 rounded-lg border space-y-1">
@@ -1676,30 +1700,67 @@
         html = `
           <div class="bg-slate-50 p-3 rounded-lg border space-y-1">
             <div class="flex justify-between"><span>Date:</span> <strong>${v.date}</strong></div>
-            <div class="flex justify-between"><span>Category:</span> <strong>${v.category || 'Vendor Change Received'}</strong></div>
             <div class="flex justify-between"><span>Vendor Name:</span> <strong>${v.vendorName || 'N/A'}</strong></div>
             <div class="flex justify-between"><span>Mobile:</span> <strong>${v.vendorMobile || 'N/A'}</strong></div>
             <div class="flex justify-between"><span>Receiving Store:</span> <strong>${v.branch}</strong></div>
             <div class="flex justify-between"><span>Payment Method:</span> <strong>${v.paymentMethod}</strong></div>
-            <div class="flex justify-between"><span>Payment Ref:</span> <strong>${v.payRef}</strong></div>
+            <div class="flex justify-between"><span>Remarks:</span> <strong>${v.remarks || 'None'}</strong></div>
             <div class="flex justify-between"><span>Paid Amount:</span> <strong>₹${v.paidAmount.toLocaleString('en-IN')}</strong></div>
             <div class="flex justify-between"><span>Cash Received:</span> <strong class="text-purple-700">₹${v.cashValueReceived.toLocaleString('en-IN')}</strong></div>
           </div>
         `;
       } else if (itemType === 'soiled') {
-        const s = appState.soiledNotes.find(s => s.id === refId);
+        let s = appState.soiledNotes.find(item => item.id === refId);
+        let denomsObj = s ? s.denoms : null;
+
+        // Fallback: If not in soiledNotes array directly, look up transaction ledger
+        if (!s) {
+          const txn = appState.transactions.find(t => t.refId === refId);
+          if (txn) {
+            s = {
+              id: txn.refId,
+              date: txn.date,
+              branch: txn.branch,
+              totalVal: Math.abs(txn.amount),
+              source: txn.remarks,
+              status: 'ISOLATED'
+            };
+            denomsObj = txn.denoms;
+          }
+        }
+
         if (!s) return;
-        const dObj = DENOM_CONFIG.find(d => d.key === s.denomKey);
-        title.innerText = `Damaged Cash ${s.id}`;
-        sub.innerText = `Store: ${s.branch}`;
+
+        let denomText = '';
+        if (denomsObj) {
+          for (let k in denomsObj) {
+            if (denomsObj[k] > 0) {
+              const dObj = DENOM_CONFIG.find(d => d.key === k);
+              const count = denomsObj[k];
+              const val = dObj ? count * dObj.val : 0;
+              denomText += `<div class="flex justify-between py-1 border-b border-amber-100/50 last:border-b-0">
+                <span>₹${dObj ? dObj.label : k}:</span> 
+                <strong>${count} pcs (₹${val.toLocaleString('en-IN')})</strong>
+              </div>`;
+            }
+          }
+        }
+
+        title.innerText = `Damaged Cash Entry ${s.id}`;
+        sub.innerText = `Store Location: ${s.branch}`;
 
         html = `
-          <div class="bg-slate-50 p-3 rounded-lg border space-y-1">
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+            <div class="flex justify-between"><span>Entry ID:</span> <strong>${s.id}</strong></div>
             <div class="flex justify-between"><span>Date Recorded:</span> <strong>${s.date}</strong></div>
-            <div class="flex justify-between"><span>Denomination:</span> <strong>${dObj ? dObj.label : s.denomKey}</strong></div>
-            <div class="flex justify-between"><span>Quantity:</span> <strong>${s.qty} pcs</strong></div>
-            <div class="flex justify-between"><span>Total Value:</span> <strong class="text-amber-700">₹${s.totalVal.toLocaleString('en-IN')}</strong></div>
-            <div class="flex justify-between"><span>Source / Reason:</span> <strong>${s.source}</strong></div>
+            <div class="flex justify-between"><span>Store Location:</span> <strong class="capitalize">${s.branch}</strong></div>
+            <div class="flex justify-between"><span>Reason / Source:</span> <strong>${s.source || 'N/A'}</strong></div>
+            <div class="flex justify-between"><span>Status:</span> <strong class="text-amber-800">${s.status || 'ISOLATED'}</strong></div>
+            <div class="flex justify-between pt-1 border-t text-sm"><span>Total Damaged Amount:</span> <strong class="text-amber-700">₹${s.totalVal.toLocaleString('en-IN')}</strong></div>
+          </div>
+          <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 space-y-1">
+            <div class="font-bold text-amber-900 font-sans border-b border-amber-200 pb-1 mb-1">Damaged Notes Denomination Breakdown</div>
+            ${denomText || `<div class="text-slate-500 font-sans">${s.denomSummary || 'No denomination breakdown recorded'}</div>`}
           </div>
         `;
       }
@@ -1728,7 +1789,7 @@
 
         tbody.innerHTML += `
           <tr class="hover:bg-slate-100/70 border-b border-slate-200">
-            <td class="p-3 font-bold font-sans text-slate-900 bg-slate-50 border-r border-slate-200">${d.label}</td>
+            <td class="p-3 font-bold font-sans text-slate-900 bg-slate-50 border-r border-slate-200">₹${d.label}</td>
             <td class="p-3 text-center bg-emerald-50/50 text-emerald-950 font-semibold">${gQty} pcs</td>
             <td class="p-3 text-right bg-emerald-50/60 font-bold text-emerald-900 border-r border-slate-200">₹${gVal.toLocaleString('en-IN')}</td>
             <td class="p-3 text-center bg-blue-50/50 text-blue-950 font-semibold">${kQty} pcs</td>
@@ -1767,7 +1828,7 @@
           const val = qty * d.val;
           container.innerHTML += `
             <div class="flex justify-between items-center bg-slate-50 p-2 rounded border border-slate-100 font-mono">
-              <span class="font-bold text-slate-700 font-sans">${d.label}</span>
+              <span class="font-bold text-slate-700 font-sans">₹${d.label}</span>
               <div class="text-right">
                 <span class="text-slate-500 mr-2">${qty} pcs</span>
                 <strong class="text-slate-900">₹${val.toLocaleString('en-IN')}</strong>
@@ -1833,7 +1894,7 @@
         container.innerHTML += `
           <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 text-xs flex justify-between items-center">
             <div>
-              <strong class="capitalize">${w.branch}</strong>: ${w.denom} stock low!
+              <strong class="capitalize">${w.branch}</strong>: ₹${w.denom} stock low!
               <div class="text-[10px] text-amber-700 font-mono">Has ${w.qty} pcs (Min required: ${w.min})</div>
             </div>
             <button onclick="openCashModal('credit')" class="bg-amber-600 text-white font-bold text-[10px] px-2 py-1 rounded shadow">Add Stock</button>
@@ -1930,7 +1991,7 @@
       for (let k in trf.denoms) {
         if ((appState.branches[fromB][k] || 0) < trf.denoms[k]) {
           const dLabel = DENOM_CONFIG.find(d => d.key === k).label;
-          return alert(`Cannot approve: ${fromB} now only has ${appState.branches[fromB][k] || 0} pcs of ${dLabel}.`);
+          return alert(`Cannot approve: ${fromB} now only has ${appState.branches[fromB][k] || 0} pcs of ₹${dLabel}.`);
         }
       }
 
@@ -1948,7 +2009,7 @@
         date: trf.approvedDate,
         type: 'TRANSFER',
         branch: fromB,
-        category: `Store Transfer Out → ${toB}`,
+        category: `Store Transfer Out ➔ ${toB}`,
         amount: -trf.amount,
         handler: trf.handler,
         remarks: `Approved transfer to ${toB}`,
@@ -1960,14 +2021,12 @@
         date: trf.approvedDate,
         type: 'TRANSFER',
         branch: toB,
-        category: `Store Transfer In ← ${fromB}`,
+        category: `Store Transfer In ➔ ${fromB}`,
         amount: trf.amount,
         handler: trf.handler,
         remarks: `Approved transfer from ${fromB}`,
         denoms: trf.denoms
       });
-
-      showEntrySuccessModal(trf.refId, `Store Transfer Approved (${fromB} -> ${toB})`, toB, trf.amount, trf.handler, trf.remarks, trf.denoms);
 
       saveState();
       renderAllViews();
@@ -2007,7 +2066,7 @@
             <td class="p-3 text-right font-black font-mono text-emerald-700">₹${v.cashValueReceived.toLocaleString('en-IN')}</td>
             <td class="p-3 text-slate-700 font-sans">
               <div>${v.paymentMethod}</div>
-              <div class="text-[10px] text-slate-400 font-mono">Ref: ${v.payRef}</div>
+              <div class="text-[10px] text-slate-400 font-mono">Remarks: ${v.remarks || 'None'}</div>
             </td>
             <td class="p-3 text-right font-bold font-mono text-purple-900">₹${v.paidAmount.toLocaleString('en-IN')}</td>
             <td class="p-3 text-center font-sans">
@@ -2026,19 +2085,17 @@
       tbody.innerHTML = '';
 
       if (appState.soiledNotes.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-400 font-sans">No damaged notes recorded in vault.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400 font-sans">No damaged notes recorded in vault.</td></tr>`;
         return;
       }
 
       appState.soiledNotes.slice().reverse().forEach(s => {
-        const dObj = DENOM_CONFIG.find(d => d.key === s.denomKey);
         tbody.innerHTML += `
           <tr class="hover:bg-slate-50 border-b border-slate-100">
             <td class="p-3 font-mono font-bold text-slate-800">${s.id}</td>
             <td class="p-3 text-slate-500 text-[11px] font-mono">${s.date}</td>
             <td class="p-3 capitalize font-semibold text-slate-700 font-sans">${s.branch}</td>
-            <td class="p-3 font-bold text-slate-800 font-sans">${dObj ? dObj.label : s.denomKey}</td>
-            <td class="p-3 text-center font-mono">${s.qty} pcs</td>
+            <td class="p-3 font-bold text-slate-800 font-sans">${s.denomSummary}</td>
             <td class="p-3 text-right font-black font-mono text-amber-700">₹${s.totalVal.toLocaleString('en-IN')}</td>
             <td class="p-3 text-slate-600 font-sans">${s.source}</td>
             <td class="p-3 text-center font-sans">
@@ -2046,7 +2103,11 @@
                 <i class="fa-solid fa-eye mr-1"></i> View
               </button>
             </td>
-            <td class="p-3 text-center font-sans"><span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">${s.status}</span></td>
+            <td class="p-3 text-center font-sans">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded ${s.status === 'DEPOSITED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                ${s.status}
+              </span>
+            </td>
           </tr>
         `;
       });
@@ -2064,7 +2125,7 @@
           const val = txn.denoms[k] * dObj.val;
           denomRows += `
             <div style="display:flex; justify-between; margin-bottom: 2px;">
-              <span>${dObj.label} x ${txn.denoms[k]} pcs</span>
+              <span>₹${dObj.label} x ${txn.denoms[k]} pcs</span>
               <span>₹${val.toLocaleString('en-IN')}</span>
             </div>
           `;
@@ -2137,32 +2198,12 @@
       alert("Entry updated successfully!");
     }
 
-    function handleCategorySelectionChange(val) {
-      if (val === "Vendor Change") {
-        closeModal('cashModal');
-        openVendorModal();
-      } else if (val === "Store Transfer") {
-        closeModal('cashModal');
-        openTransferModal();
-      }
-    }
-
     function promptConfirmCashSubmit(e) {
       e.preventDefault();
+      activeModalToReopen = 'cashModal';
       const type = document.getElementById('cashTxnType').value;
       const branch = document.getElementById('cashBranch').value;
       const cat = document.getElementById('cashCategory').value;
-
-      if (cat === "Vendor Change") {
-        closeModal('cashModal');
-        openVendorModal();
-        return;
-      }
-      if (cat === "Store Transfer") {
-        closeModal('cashModal');
-        openTransferModal();
-        return;
-      }
 
       const handler = document.getElementById('cashHandler').value;
       const ref = document.getElementById('cashRef').value || `REC-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -2178,14 +2219,37 @@
         if (qty > 0) {
           deltaObj[d.key] = qty;
           totalAmount += qty * d.val;
-          denomSummary.push(`${d.label} x ${qty} pcs`);
+          denomSummary.push(`₹${d.label} x ${qty} pcs`);
         }
       });
 
       if (totalAmount === 0) return alert("Please enter at least one denomination quantity.");
 
-      pendingSubmission = { type, branch, cat, handler, ref, remarks, deltaObj, totalAmount };
+      pendingSubmission = {
+        execute: () => {
+          for (let k in deltaObj) {
+            if (type === 'credit') {
+              appState.branches[branch][k] = (appState.branches[branch][k] || 0) + deltaObj[k];
+            } else {
+              appState.branches[branch][k] = (appState.branches[branch][k] || 0) - deltaObj[k];
+            }
+          }
 
+          appState.transactions.push({
+            refId: ref,
+            date: getActiveFormattedDate(),
+            type: type === 'credit' ? 'CREDIT' : 'DEBIT',
+            branch: branch,
+            category: cat,
+            amount: type === 'credit' ? totalAmount : -totalAmount,
+            handler: handler,
+            remarks: remarks,
+            denoms: deltaObj
+          });
+        }
+      };
+
+      document.getElementById('confirmModalHeading').innerText = "Confirm Cash Entry Submission";
       const container = document.getElementById('confirmDetailsContent');
       container.innerHTML = `
         <div class="flex justify-between"><span>Type:</span><strong class="uppercase text-emerald-800">${type === 'credit' ? 'Cash In (+)' : 'Cash Out (-)'}</strong></div>
@@ -2202,55 +2266,312 @@
       `;
 
       closeModal('cashModal');
-      document.getElementById('confirmExecuteBtn').onclick = executeConfirmedCashSubmit;
+      document.getElementById('confirmExecuteBtn').onclick = executeConfirmedSubmission;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    function promptConfirmTransferSubmit(e) {
+      e.preventDefault();
+      activeModalToReopen = 'transferModal';
+      const fromB = document.getElementById('trfFrom').value;
+      const toB = document.getElementById('trfTo').value;
+      const handler = document.getElementById('trfHandler').value;
+      const reason = document.getElementById('trfReason').value;
+      const remarks = document.getElementById('trfRemarks').value;
+      const ref = `TRF-${Math.floor(10000 + Math.random() * 90000)}`;
+
+      let deltaObj = {}; let totalAmount = 0; let denomStrings = [];
+      DENOM_CONFIG.forEach(d => {
+        const qty = parseInt(document.getElementById(`trf-${d.key}`).value) || 0;
+        if (qty > 0) { deltaObj[d.key] = qty; totalAmount += qty * d.val; denomStrings.push(`₹${d.label}x${qty}`); }
+      });
+
+      if (totalAmount === 0) return alert("Please enter denominations to transfer.");
+
+      for (let k in deltaObj) {
+        if ((appState.branches[fromB][k] || 0) < deltaObj[k]) {
+          const dLabel = DENOM_CONFIG.find(d => d.key === k).label;
+          return alert(`Transfer failed: Only ${appState.branches[fromB][k] || 0} pcs of ₹${dLabel} available physically in ${fromB}.`);
+        }
+      }
+
+      pendingSubmission = {
+        execute: () => {
+          appState.transfers.push({
+            refId: ref,
+            date: getActiveFormattedDate(),
+            fromBranch: fromB,
+            toBranch: toB,
+            amount: totalAmount,
+            handler,
+            reason,
+            remarks,
+            denomSummary: denomStrings.join(', '),
+            denoms: deltaObj,
+            status: 'PENDING APPROVAL'
+          });
+        }
+      };
+
+      document.getElementById('confirmModalHeading').innerText = "Confirm Branch Transfer Request";
+      const container = document.getElementById('confirmDetailsContent');
+      container.innerHTML = `
+        <div class="flex justify-between"><span>Sender Store:</span><strong class="capitalize">${fromB}</strong></div>
+        <div class="flex justify-between"><span>Receiver Store:</span><strong class="capitalize">${toB}</strong></div>
+        <div class="flex justify-between"><span>Employee Name:</span><strong>${handler}</strong></div>
+        <div class="flex justify-between"><span>Transfer Reason:</span><strong>${reason}</strong></div>
+        <div class="pt-2 border-t font-semibold">Denominations:</div>
+        <div class="text-slate-600 pl-2">${denomStrings.join(', ')}</div>
+        <div class="pt-2 border-t flex justify-between font-bold text-sm text-blue-900">
+          <span>Total Transfer Value:</span>
+          <span>₹${totalAmount.toLocaleString('en-IN')}</span>
+        </div>
+      `;
+
+      closeModal('transferModal');
+      document.getElementById('confirmExecuteBtn').onclick = executeConfirmedSubmission;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    function promptConfirmVendorSubmit(e) {
+      e.preventDefault();
+      activeModalToReopen = 'vendorModal';
+      const vName = document.getElementById('venName').value;
+      const vMobile = document.getElementById('venMobile').value;
+      const branch = document.getElementById('venBranch').value;
+      const method = document.getElementById('venMethod').value;
+      const handler = document.getElementById('venHandler').value;
+      const remarks = document.getElementById('venRemarks').value;
+      const paidAmt = parseFloat(document.getElementById('venPaidAmount').value) || 0;
+      const ref = `VEN-${Math.floor(10000 + Math.random() * 90000)}`;
+
+      let deltaObj = {}; let totalCashReceived = 0; let denomStrings = [];
+      DENOM_CONFIG.forEach(d => {
+        const qty = parseInt(document.getElementById(`ven-${d.key}`).value) || 0;
+        if (qty > 0) { deltaObj[d.key] = qty; totalCashReceived += qty * d.val; denomStrings.push(`₹${d.label}x${qty}`); }
+      });
+
+      if (totalCashReceived === 0) return alert("Please enter cash change received.");
+
+      pendingSubmission = {
+        execute: () => {
+          for (let k in deltaObj) appState.branches[branch][k] = (appState.branches[branch][k] || 0) + deltaObj[k];
+          const formattedDate = getActiveFormattedDate();
+
+          appState.vendorPayments.push({ refId: ref, date: formattedDate, vendorName: vName, vendorMobile: vMobile, branch, cashValueReceived: totalCashReceived, paymentMethod: method, remarks, paidAmount: paidAmt, denoms: deltaObj });
+          appState.transactions.push({ refId: ref, date: formattedDate, type: 'VENDOR_PROCURE', branch, category: `Vendor Change Received (${vName})`, amount: totalCashReceived, handler: handler, remarks: `Method: ${method} | Remarks: ${remarks || 'None'}`, denoms: deltaObj });
+        }
+      };
+
+      document.getElementById('confirmModalHeading').innerText = "Confirm Vendor Cash Change Entry";
+      const container = document.getElementById('confirmDetailsContent');
+      container.innerHTML = `
+        <div class="flex justify-between"><span>Vendor Name:</span><strong>${vName}</strong></div>
+        <div class="flex justify-between"><span>Mobile Number:</span><strong>${vMobile || 'N/A'}</strong></div>
+        <div class="flex justify-between"><span>Receiving Store:</span><strong class="capitalize">${branch}</strong></div>
+        <div class="flex justify-between"><span>Payment Method:</span><strong>${method}</strong></div>
+        <div class="flex justify-between"><span>Employee Name:</span><strong>${handler}</strong></div>
+        <div class="pt-2 border-t font-semibold">Cash Collected:</div>
+        <div class="text-slate-600 pl-2">${denomStrings.join(', ')}</div>
+        <div class="pt-2 border-t flex justify-between font-bold text-sm text-purple-900">
+          <span>Total Cash Received:</span>
+          <span>₹${totalCashReceived.toLocaleString('en-IN')}</span>
+        </div>
+      `;
+
+      closeModal('vendorModal');
+      document.getElementById('confirmExecuteBtn').onclick = executeConfirmedSubmission;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    function promptConfirmSoiledSubmit(e) {
+      e.preventDefault();
+      activeModalToReopen = 'soiledModal';
+      const branch = document.getElementById('soiledBranch').value;
+      const source = document.getElementById('soiledSource').value;
+
+      let deltaObj = {}; let totalVal = 0; let denomStrings = [];
+      DENOM_CONFIG.forEach(d => {
+        const qty = parseInt(document.getElementById(`soiled-${d.key}`).value) || 0;
+        if (qty > 0) {
+          deltaObj[d.key] = qty;
+          totalVal += qty * d.val;
+          denomStrings.push(`₹${d.label} x ${qty} pcs`);
+        }
+      });
+
+      if (totalVal === 0) return alert("Please enter at least one damaged note denomination quantity.");
+
+      for (let k in deltaObj) {
+        if ((appState.branches[branch][k] || 0) < deltaObj[k]) {
+          const dLabel = DENOM_CONFIG.find(d => d.key === k).label;
+          return alert(`Not enough ₹${dLabel} in usable store stock.`);
+        }
+      }
+
+      const id = `SLD-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      pendingSubmission = {
+        execute: () => {
+          for (let k in deltaObj) {
+            appState.branches[branch][k] -= deltaObj[k];
+          }
+          const formattedDate = getActiveFormattedDate();
+
+          appState.soiledNotes.push({ id, date: formattedDate, branch, denoms: deltaObj, denomSummary: denomStrings.join(', '), totalVal, source, status: 'ISOLATED' });
+
+          appState.transactions.push({
+            refId: id,
+            date: formattedDate,
+            type: 'SOILED_LOG',
+            branch,
+            category: `Damaged Cash Entry`,
+            amount: -totalVal,
+            handler: 'Vault Custodian',
+            remarks: source,
+            denoms: deltaObj
+          });
+        }
+      };
+
+      document.getElementById('confirmModalHeading').innerText = "Confirm Damaged Notes Log";
+      const container = document.getElementById('confirmDetailsContent');
+      container.innerHTML = `
+        <div class="flex justify-between"><span>Store Location:</span><strong class="capitalize">${branch}</strong></div>
+        <div class="flex justify-between"><span>Reason / Source:</span><strong>${source}</strong></div>
+        <div class="pt-2 border-t font-semibold">Damaged Denominations:</div>
+        <div class="text-slate-600 pl-2">${denomStrings.join(', ')}</div>
+        <div class="pt-2 border-t flex justify-between font-bold text-sm text-amber-900">
+          <span>Total Damaged Value:</span>
+          <span>₹${totalVal.toLocaleString('en-IN')}</span>
+        </div>
+      `;
+
+      closeModal('soiledModal');
+      document.getElementById('confirmExecuteBtn').onclick = executeConfirmedSubmission;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    function promptConfirmBankDepositSubmit(e) {
+      e.preventDefault();
+      activeModalToReopen = 'bankDepositModal';
+      const branch = document.getElementById('bankDepBranch').value;
+      const account = document.getElementById('bankDepAccount').value;
+      const handler = document.getElementById('bankDepHandler').value;
+      const customRef = document.getElementById('bankDepRef').value;
+      const remarks = document.getElementById('bankDepRemarks').value;
+      const ref = customRef || `BNK-${Math.floor(10000 + Math.random() * 90000)}`;
+
+      let deltaObj = {}; let totalDepositVal = 0; let denomStrings = [];
+      DENOM_CONFIG.forEach(d => {
+        const qty = parseInt(document.getElementById(`bank-${d.key}`).value) || 0;
+        if (qty > 0) {
+          deltaObj[d.key] = qty;
+          totalDepositVal += qty * d.val;
+          denomStrings.push(`₹${d.label} x ${qty} pcs`);
+        }
+      });
+
+      if (totalDepositVal === 0) return alert("Please enter at least one denomination quantity to deposit.");
+
+      const vaultStock = getVaultStockPerDenom(branch);
+      for (let k in deltaObj) {
+        if (deltaObj[k] > vaultStock[k]) {
+          const dLabel = DENOM_CONFIG.find(d => d.key === k).label;
+          return alert(`Cannot deposit: Vault only has ${vaultStock[k]} pcs of ₹${dLabel} damaged notes.`);
+        }
+      }
+
+      pendingSubmission = {
+        execute: () => {
+          for (let k in deltaObj) {
+            let qtyToDeduct = deltaObj[k];
+            const isolatedEntries = appState.soiledNotes.filter(s => s.branch === branch && s.status === 'ISOLATED');
+
+            for (let entry of isolatedEntries) {
+              if (qtyToDeduct <= 0) break;
+              if (entry.denoms && entry.denoms[k]) {
+                if (entry.denoms[k] <= qtyToDeduct) {
+                  qtyToDeduct -= entry.denoms[k];
+                  entry.denoms[k] = 0;
+                } else {
+                  entry.denoms[k] -= qtyToDeduct;
+                  qtyToDeduct = 0;
+                }
+                // recalculate totalVal for entry
+                let newTot = 0;
+                for (let dk in entry.denoms) {
+                  const dObj = DENOM_CONFIG.find(d => d.key === dk);
+                  if (dObj) newTot += entry.denoms[dk] * dObj.val;
+                }
+                entry.totalVal = newTot;
+                if (newTot === 0) entry.status = 'DEPOSITED';
+              }
+            }
+          }
+
+          const formattedDate = getActiveFormattedDate();
+          appState.transactions.push({
+            refId: ref,
+            date: formattedDate,
+            type: 'DEBIT',
+            branch: branch,
+            category: `Damaged Bank Deposit (${account})`,
+            amount: -totalDepositVal,
+            handler: handler,
+            remarks: remarks ? `${remarks} | Acct: ${account}` : `Deposited to ${account}`,
+            denoms: deltaObj
+          });
+        }
+      };
+
+      document.getElementById('confirmModalHeading').innerText = "Confirm Bank Deposit Submission";
+      const container = document.getElementById('confirmDetailsContent');
+      container.innerHTML = `
+        <div class="flex justify-between"><span>Vault Location:</span><strong class="capitalize">${branch}</strong></div>
+        <div class="flex justify-between"><span>Target Bank Account:</span><strong>${account}</strong></div>
+        <div class="flex justify-between"><span>Employee Name:</span><strong>${handler}</strong></div>
+        <div class="pt-2 border-t font-semibold">Deposit Denominations:</div>
+        <div class="text-slate-600 pl-2">${denomStrings.join(', ')}</div>
+        <div class="pt-2 border-t flex justify-between font-bold text-sm text-emerald-900">
+          <span>Total Bank Deposit Value:</span>
+          <span>₹${totalDepositVal.toLocaleString('en-IN')}</span>
+        </div>
+      `;
+
+      closeModal('bankDepositModal');
+      document.getElementById('confirmExecuteBtn').onclick = executeConfirmedSubmission;
       document.getElementById('confirmModal').classList.remove('hidden');
     }
 
     function cancelConfirmModal() {
       closeModal('confirmModal');
-      document.getElementById('cashModal').classList.remove('hidden');
+      if (activeModalToReopen) {
+        document.getElementById(activeModalToReopen).classList.remove('hidden');
+      }
     }
 
-    function executeConfirmedCashSubmit() {
+    function executeConfirmedSubmission() {
       if (!pendingSubmission) return;
-
-      const { type, branch, cat, handler, ref, remarks, deltaObj, totalAmount } = pendingSubmission;
-
-      for (let k in deltaObj) {
-        if (type === 'credit') {
-          appState.branches[branch][k] = (appState.branches[branch][k] || 0) + deltaObj[k];
-        } else {
-          appState.branches[branch][k] = (appState.branches[branch][k] || 0) - deltaObj[k];
-        }
-      }
-
-      const formattedDate = getActiveFormattedDate();
-
-      appState.transactions.push({
-        refId: ref,
-        date: formattedDate,
-        type: type === 'credit' ? 'CREDIT' : 'DEBIT',
-        branch: branch,
-        category: cat,
-        amount: type === 'credit' ? totalAmount : -totalAmount,
-        handler: handler,
-        remarks: remarks,
-        denoms: deltaObj
-      });
-
+      pendingSubmission.execute();
       pendingSubmission = null;
+      activeModalToReopen = null;
       saveState();
       renderAllViews();
       closeModal('confirmModal');
-
-      showEntrySuccessModal(ref, cat, branch, type === 'credit' ? totalAmount : -totalAmount, handler, remarks, deltaObj);
     }
 
-    function handleEnterTab(e, nextId) {
-      if (e.key === 'Enter' || e.key === 'Tab') {
+    function handleEnterTab(e, nextId, prevId) {
+      if (e.key === 'Enter') {
         e.preventDefault();
         const nextEl = document.getElementById(nextId);
         if (nextEl) { nextEl.focus(); nextEl.select(); }
+      } else if (e.shiftKey && e.key === 'Tab') {
+        if (prevId) {
+          e.preventDefault();
+          const prevEl = document.getElementById(prevId);
+          if (prevEl) { prevEl.focus(); prevEl.select(); }
+        }
       }
     }
 
@@ -2266,18 +2587,12 @@
 
       const catSelect = document.getElementById('cashCategory');
       catSelect.innerHTML = type === 'credit' ? `
-        <option value="Billing Cash Drawer">Billing Cash Drawer</option>
-        <option value="Vendor Change">Vendor Change</option>
-        <option value="Damage Cash Entry">Damage Cash Entry</option>
-        <option value="Customer Return Balance Adjustment">Customer Return Balance Adjustment</option>
-        <option value="Daily Store Float Addition">Daily Store Float Addition</option>
-        <option value="Other Cash Receipt">Other Cash Receipt</option>
+        <option value="Excess from billing">Excess from billing</option>
+        <option value="Damage cash">Damage cash</option>
+        <option value="Others">Others</option>
       ` : `
-        <option value="Cash Issued to Vendor">Cash Issued to Vendor</option>
-        <option value="Store Transfer">Store Transfer</option>
-        <option value="Billing Cash Drawer">Billing Cash Drawer</option>
-        <option value="Bank Cash Deposit">Bank Cash Deposit</option>
-        <option value="Other Cash Expense">Other Cash Expense</option>
+        <option value="Cash Drawer">Cash Drawer</option>
+        <option value="Others">Others</option>
       `;
 
       DENOM_CONFIG.forEach(d => { const inp = document.getElementById(`denom-${d.key}`); if (inp) inp.value = '0'; });
@@ -2361,15 +2676,6 @@
       });
 
       document.getElementById('trfModalCalculated').innerText = `₹${tot.toLocaleString('en-IN')}`;
-      
-      const submitBtn = document.getElementById('trfSubmitBtn');
-      if (hasError) {
-        submitBtn.disabled = true;
-        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-      } else {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-      }
     }
 
     function openVendorModal() {
@@ -2377,11 +2683,10 @@
       document.getElementById('venModalCalculated').innerText = '₹0';
       document.getElementById('venName').value = '';
       document.getElementById('venMobile').value = '';
-      document.getElementById('venPayRef').value = '';
+      document.getElementById('venHandler').value = '';
+      document.getElementById('venRemarks').value = '';
       document.getElementById('venPaidAmount').value = '';
-      document.getElementById('venCategory').value = 'Vendor Change Received';
 
-      toggleVendorContactFields('Vendor Change Received');
       updateVendorModalStoreStock();
       document.getElementById('vendorModal').classList.remove('hidden');
     }
@@ -2406,115 +2711,132 @@
     }
 
     function openSoiledModal() {
-      document.getElementById('soiledQty').value = '1';
+      const branchSelect = document.getElementById('soiledBranch');
+      branchSelect.value = appState.role === 'kurmannapalem' ? 'kurmannapalem' : 'gajuwaka';
+
+      DENOM_CONFIG.forEach(d => { const inp = document.getElementById(`soiled-${d.key}`); if (inp) inp.value = '0'; });
+      document.getElementById('soiledModalCalculated').innerText = '₹0';
       document.getElementById('soiledSource').value = '';
+
+      updateSoiledModalStoreStock();
       document.getElementById('soiledModal').classList.remove('hidden');
     }
 
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+    function updateSoiledModalStoreStock() {
+      const bKey = document.getElementById('soiledBranch').value;
+      const stock = appState.branches[bKey] || {};
+      const tot = calcBranchTotal(bKey);
 
-    function handleTransferSubmit(e) {
-      e.preventDefault();
-      const fromB = document.getElementById('trfFrom').value;
-      const toB = document.getElementById('trfTo').value;
-      const handler = document.getElementById('trfHandler').value;
-      const reason = document.getElementById('trfReason').value;
-      const remarks = document.getElementById('trfRemarks').value;
-      const ref = `TRF-${Math.floor(10000 + Math.random() * 90000)}`;
-
-      let deltaObj = {}; let totalAmount = 0; let denomStrings = [];
+      document.getElementById('soiledStoreBalBadge').innerText = `Usable: ₹${tot.toLocaleString('en-IN')}`;
       DENOM_CONFIG.forEach(d => {
-        const qty = parseInt(document.getElementById(`trf-${d.key}`).value) || 0;
-        if (qty > 0) { deltaObj[d.key] = qty; totalAmount += qty * d.val; denomStrings.push(`${d.label}x${qty}`); }
+        const badge = document.getElementById(`soiled-avail-${d.key}`);
+        if (badge) badge.innerText = `(${stock[d.key] || 0} avail)`;
       });
+      calcSoiledModalTotal();
+    }
 
-      if (totalAmount === 0) return alert("Please enter denominations to transfer.");
+    function calcSoiledModalTotal() {
+      let tot = 0;
+      let hasError = false;
+      const bKey = document.getElementById('soiledBranch').value;
+      const stock = appState.branches[bKey] || {};
 
-      for (let k in deltaObj) {
-        if ((appState.branches[fromB][k] || 0) < deltaObj[k]) {
-          const dLabel = DENOM_CONFIG.find(d => d.key === k).label;
-          return alert(`Transfer failed: Only ${appState.branches[fromB][k] || 0} pcs of ${dLabel} available physically in ${fromB}.`);
+      DENOM_CONFIG.forEach(d => {
+        const inp = document.getElementById(`soiled-${d.key}`);
+        const errSpan = document.getElementById(`err-soiled-${d.key}`);
+        const qty = parseInt(inp?.value) || 0;
+        const availableQty = stock[d.key] || 0;
+
+        if (qty > availableQty) {
+          hasError = true;
+          inp.classList.add('border-red-500', 'bg-red-50');
+          if (errSpan) {
+            errSpan.innerText = `Max ${availableQty} pcs`;
+            errSpan.classList.remove('hidden');
+          }
+        } else {
+          inp.classList.remove('border-red-500', 'bg-red-50');
+          if (errSpan) errSpan.classList.add('hidden');
         }
-      }
 
-      appState.transfers.push({
-        refId: ref,
-        date: getActiveFormattedDate(),
-        fromBranch: fromB,
-        toBranch: toB,
-        amount: totalAmount,
-        handler,
-        reason,
-        remarks,
-        denomSummary: denomStrings.join(', '),
-        denoms: deltaObj,
-        status: 'PENDING APPROVAL'
+        tot += qty * d.val;
       });
 
-      saveState();
-      renderAllViews();
-      closeModal('transferModal');
-
-      showEntrySuccessModal(ref, `Store Transfer Requested (${fromB} -> ${toB})`, fromB, totalAmount, handler, remarks, deltaObj);
+      document.getElementById('soiledModalCalculated').innerText = `₹${tot.toLocaleString('en-IN')}`;
     }
 
-    function handleVendorSubmit(e) {
-      e.preventDefault();
-      const cat = document.getElementById('venCategory').value;
-      const vName = document.getElementById('venName')?.value || '';
-      const vMobile = document.getElementById('venMobile')?.value || '';
-      const branch = document.getElementById('venBranch').value;
-      const method = document.getElementById('venMethod').value;
-      const payRef = document.getElementById('venPayRef').value;
-      const paidAmt = parseFloat(document.getElementById('venPaidAmount').value) || 0;
-      const ref = `VEN-${Math.floor(10000 + Math.random() * 90000)}`;
+    function openBankDepositModal() {
+      const branchSelect = document.getElementById('bankDepBranch');
+      branchSelect.value = appState.role === 'kurmannapalem' ? 'kurmannapalem' : 'gajuwaka';
 
-      let deltaObj = {}; let totalCashReceived = 0;
+      DENOM_CONFIG.forEach(d => { const inp = document.getElementById(`bank-${d.key}`); if (inp) inp.value = '0'; });
+      document.getElementById('bankDepModalCalculated').innerText = '₹0';
+      document.getElementById('bankDepHandler').value = '';
+      document.getElementById('bankDepRef').value = '';
+      document.getElementById('bankDepRemarks').value = '';
+
+      updateBankDepositModalVaultStock();
+      document.getElementById('bankDepositModal').classList.remove('hidden');
+    }
+
+    function getVaultStockPerDenom(branch) {
+      let vaultStock = { n500: 0, n200: 0, n100: 0, n50: 0, n20: 0, n10: 0, c5: 0, c2: 0, c1: 0 };
+      appState.soiledNotes.forEach(item => {
+        if (item.branch === branch && item.status === 'ISOLATED' && item.denoms) {
+          for (let k in item.denoms) {
+            if (vaultStock[k] !== undefined) {
+              vaultStock[k] += item.denoms[k];
+            }
+          }
+        }
+      });
+      return vaultStock;
+    }
+
+    function updateBankDepositModalVaultStock() {
+      const bKey = document.getElementById('bankDepBranch').value;
+      const vaultStock = getVaultStockPerDenom(bKey);
+      const totDamaged = calcBranchSoiled(bKey);
+
+      document.getElementById('bankDepVaultBalBadge').innerText = `Vault: ₹${totDamaged.toLocaleString('en-IN')}`;
       DENOM_CONFIG.forEach(d => {
-        const qty = parseInt(document.getElementById(`ven-${d.key}`).value) || 0;
-        if (qty > 0) { deltaObj[d.key] = qty; totalCashReceived += qty * d.val; }
+        const badge = document.getElementById(`bank-avail-${d.key}`);
+        if (badge) badge.innerText = `(${vaultStock[d.key] || 0} avail)`;
+      });
+      calcBankDepModalTotal();
+    }
+
+    function calcBankDepModalTotal() {
+      let tot = 0;
+      let hasError = false;
+      const bKey = document.getElementById('bankDepBranch').value;
+      const vaultStock = getVaultStockPerDenom(bKey);
+
+      DENOM_CONFIG.forEach(d => {
+        const inp = document.getElementById(`bank-${d.key}`);
+        const errSpan = document.getElementById(`err-bank-${d.key}`);
+        const qty = parseInt(inp?.value) || 0;
+        const availableQty = vaultStock[d.key] || 0;
+
+        if (qty > availableQty) {
+          hasError = true;
+          inp.classList.add('border-red-500', 'bg-red-50');
+          if (errSpan) {
+            errSpan.innerText = `Max ${availableQty} pcs`;
+            errSpan.classList.remove('hidden');
+          }
+        } else {
+          inp.classList.remove('border-red-500', 'bg-red-50');
+          if (errSpan) errSpan.classList.add('hidden');
+        }
+
+        tot += qty * d.val;
       });
 
-      if (totalCashReceived === 0) return alert("Please enter cash change received.");
-
-      for (let k in deltaObj) appState.branches[branch][k] = (appState.branches[branch][k] || 0) + deltaObj[k];
-
-      const formattedDate = getActiveFormattedDate();
-
-      appState.vendorPayments.push({ refId: ref, date: formattedDate, category: cat, vendorName: vName, vendorMobile: vMobile, branch, cashValueReceived: totalCashReceived, paymentMethod: method, payRef, paidAmount: paidAmt, denoms: deltaObj });
-      appState.transactions.push({ refId: ref, date: formattedDate, type: 'VENDOR_PROCURE', branch, category: `${cat}${vName ? ' (' + vName + ')' : ''}`, amount: totalCashReceived, handler: `Paid via ${method}`, remarks: `Ref: ${payRef}`, denoms: deltaObj });
-
-      saveState(); 
-      renderAllViews(); 
-      closeModal('vendorModal');
-
-      showEntrySuccessModal(ref, cat, branch, totalCashReceived, vName || 'N/A', `Ref: ${payRef}`, deltaObj);
+      document.getElementById('bankDepModalCalculated').innerText = `₹${tot.toLocaleString('en-IN')}`;
     }
 
-    function handleSoiledSubmit(e) {
-      e.preventDefault();
-      const branch = document.getElementById('soiledBranch').value;
-      const denomKey = document.getElementById('soiledDenom').value;
-      const qty = parseInt(document.getElementById('soiledQty').value) || 0;
-      const source = document.getElementById('soiledSource').value;
-      const dObj = DENOM_CONFIG.find(d => d.key === denomKey);
-      const totalVal = qty * dObj.val;
-
-      if ((appState.branches[branch][denomKey] || 0) < qty) return alert(`Not enough ${dObj.label} in usable store stock.`);
-
-      appState.branches[branch][denomKey] -= qty;
-      const id = `SLD-${Math.floor(1000 + Math.random() * 9000)}`;
-      const formattedDate = getActiveFormattedDate();
-
-      appState.soiledNotes.push({ id, date: formattedDate, branch, denomKey, qty, totalVal, source, status: 'ISOLATED' });
-      appState.transactions.push({ refId: id, date: formattedDate, type: 'SOILED_LOG', branch, category: `Damaged Cash Entry (${dObj.label})`, amount: -totalVal, handler: 'Vault Custodian', remarks: source, denoms: { [denomKey]: qty } });
-
-      saveState(); 
-      renderAllViews(); 
-      closeModal('soiledModal');
-
-      showEntrySuccessModal(id, `Damaged Cash Vault Log (${dObj.label})`, branch, -totalVal, 'Vault Custodian', source, { [denomKey]: qty });
-    }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     function exportCSV() {
       let csv = "Reference ID,Date,Type,Store,Category,Amount,Employee,Remarks\n";
