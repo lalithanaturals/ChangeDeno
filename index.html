@@ -1524,6 +1524,19 @@
       alert("Store Minimum Denominations saved successfully!");
     }
 
+    // "₹500 x 2, ₹20 x 5" from an entry's denominations — shown wherever an
+    // entry has no remarks (e.g. Cash Added entries made from the Register),
+    // so the notes involved are always visible.
+    function entryDenomSummary(t) {
+      if (!t || !t.denoms) return '';
+      return DENOM_CONFIG.filter(d => (Number(t.denoms[d.key]) || 0) > 0)
+        .map(d => `₹${d.label} x ${t.denoms[d.key]}`).join(', ');
+    }
+    function entryRemarks(t) {
+      if (t && t.remarks) return t.remarks;
+      return entryDenomSummary(t);
+    }
+
     function renderAllEntriesTab() {
       const tbody = document.getElementById('all-entries-body');
       const eraseBtn = document.getElementById('eraseAllDataBtn');
@@ -1556,7 +1569,7 @@
           t.refId.toLowerCase().includes(search) || 
           t.handler.toLowerCase().includes(search) || 
           (t.category && t.category.toLowerCase().includes(search)) ||
-          (t.remarks && t.remarks.toLowerCase().includes(search))
+          (entryRemarks(t).toLowerCase().includes(search))
         );
       }
 
@@ -1576,7 +1589,7 @@
           <td class="p-3 capitalize font-semibold text-slate-700 font-sans">${t.branch}</td>
           <td class="p-3 text-slate-700 font-sans">
             <div class="font-bold">${t.category}</div>
-            <div class="text-[10px] text-slate-400 font-normal">${t.remarks || 'No remarks'}</div>
+            <div class="text-[10px] text-slate-500 font-normal">${entryRemarks(t) || 'No remarks'}</div>
           </td>
           <td class="p-3 text-right font-black font-mono ${isPlus ? 'text-emerald-700' : 'text-slate-900'}">
             ${isPlus ? '+' : ''}₹${Math.abs(t.amount).toLocaleString('en-IN')}
@@ -1726,7 +1739,7 @@
             <div class="flex justify-between"><span>Category:</span> <strong>${txn.category}</strong></div>
             <div class="flex justify-between"><span>Employee:</span> <strong>${txn.handler}</strong></div>
             <div class="flex justify-between"><span>Amount:</span> <strong class="text-emerald-700">₹${Math.abs(txn.amount).toLocaleString('en-IN')}</strong></div>
-            <div class="flex justify-between"><span>Remarks:</span> <strong>${txn.remarks || 'None'}</strong></div>
+            <div class="flex justify-between"><span>Remarks:</span> <strong>${entryRemarks(txn) || 'None'}</strong></div>
           </div>
           <div class="bg-emerald-50/50 p-3 rounded-lg border border-emerald-100 space-y-1">
             <div class="font-bold text-slate-700 font-sans border-b pb-1 mb-1">Denomination Breakdown</div>
@@ -2898,7 +2911,7 @@
 
     function exportCSV() {
       let csv = "Reference ID,Date,Type,Store,Category,Amount,Employee,Remarks\n";
-      appState.transactions.forEach(t => { csv += `"${t.refId}","${t.date}","${t.type}","${t.branch}","${t.category}","${t.amount}","${t.handler}","${t.remarks || ''}"\n`; });
+      appState.transactions.forEach(t => { csv += `"${t.refId}","${t.date}","${t.type}","${t.branch}","${t.category}","${t.amount}","${t.handler}","${entryRemarks(t)}"\n`; });
       const blob = new Blob([csv], { type: 'text/csv' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `Lalitha_Naturals_Cash_Ledger_${new Date().toISOString().slice(0,10)}.csv`; a.click();
