@@ -396,7 +396,11 @@
             <h2 class="text-base sm:text-lg font-bold text-slate-800">Cash Denomination Stock</h2>
             <p class="text-xs text-slate-500">Live breakdown of notes and coins separated by Gajuwaka and Kurmannapalem</p>
           </div>
-          <div class="flex items-center space-x-3 text-xs font-mono font-bold">
+          <div class="flex flex-wrap items-center gap-2 text-xs font-mono font-bold">
+            <button type="button" id="emailDenomReportBtn" onclick="emailDenominationReport()" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm flex items-center space-x-2 font-sans">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span>Email PDF Report</span>
+            </button>
             <span class="flex items-center px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 mr-1.5"></span> Gajuwaka
             </span>
@@ -1838,6 +1842,84 @@
 
       content.innerHTML = html;
       modal.classList.remove('hidden');
+    }
+
+
+    // ---- EMAIL PDF REPORT (Cash Denominations tab) ----------------------
+    // Sends the current balance denominations of every store to the Google
+    // Apps Script, which builds a PDF and emails it to kanthirava.b@gmail.com
+    // (recipient fixed inside the Apps Script).
+    function buildDenominationReportPayload() {
+      const stores = [['gajuwaka', 'Gajuwaka'], ['kurmannapalem', 'Kurmannapalem']];
+      const totalsQty = {};
+      const branches = stores.map(([key, name]) => {
+        const b = (appState.branches && appState.branches[key]) || {};
+        const rows = DENOM_CONFIG.map(d => {
+          const qty = Number(b[d.key]) || 0;
+          totalsQty[d.key] = (totalsQty[d.key] || 0) + qty;
+          return { label: '₹' + d.label, qty: qty, amount: qty * d.val };
+        });
+        return {
+          name: name,
+          rows: rows,
+          totalQty: rows.reduce((a, r) => a + r.qty, 0),
+          totalAmount: rows.reduce((a, r) => a + r.amount, 0),
+          damaged: (typeof calcBranchSoiled === 'function') ? calcBranchSoiled(key) : 0
+        };
+      });
+      const totalRows = DENOM_CONFIG.map(d => ({ label: '₹' + d.label, qty: totalsQty[d.key] || 0, amount: (totalsQty[d.key] || 0) * d.val }));
+      const roleSel = document.getElementById('roleSelect');
+      const now = new Date();
+      return {
+        store: { name: 'Lalitha Naturals' },
+        generatedAt: now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        generatedBy: roleSel && roleSel.selectedOptions[0] ? roleSel.selectedOptions[0].textContent.trim() : '',
+        branches: branches,
+        totals: {
+          rows: totalRows,
+          totalQty: totalRows.reduce((a, r) => a + r.qty, 0),
+          totalAmount: totalRows.reduce((a, r) => a + r.amount, 0),
+          damaged: branches.reduce((a, b) => a + (b.damaged || 0), 0)
+        }
+      };
+    }
+
+    function emailDenominationReport() {
+      const btn = document.getElementById('emailDenomReportBtn');
+      if (btn && btn.disabled) return;
+      const payload = buildDenominationReportPayload();
+      const fmt = n => '₹' + Number(n || 0).toLocaleString('en-IN');
+      const msg = 'Email the Cash Denominations balance report (PDF) to kanthirava.b@gmail.com?\n\n' +
+        payload.branches.map(b => b.name + ': ' + fmt(b.totalAmount)).join('\n') +
+        '\nTotal: ' + fmt(payload.totals.totalAmount);
+      if (!confirm(msg)) return;
+      const label = btn ? btn.querySelector('span') : null;
+      if (btn) btn.disabled = true;
+      if (label) label.textContent = 'Sending…';
+      reportRPC('denomination_report_email', payload).then(res => {
+        if (res && res.ok && res.type === 'denomination_report_email') {
+          alert('✅ PDF report emailed to ' + (res.to || 'kanthirava.b@gmail.com'));
+        } else if (res && res.ok) {
+          alert('The Google Apps Script is an older version — no report was sent. Update the Apps Script and deploy a new version.');
+        } else {
+          alert('The report could not be sent: ' + ((res && res.error) || 'unknown error'));
+        }
+      }).catch(err => {
+        alert('Could not reach Google to send the report (' + (err && err.message ? err.message : err) + '). Check the internet connection and try again.');
+      }).finally(() => {
+        if (btn) btn.disabled = false;
+        if (label) label.textContent = 'Email PDF Report';
+      });
+    }
+
+    // Same Google Apps Script Web App the Shift Register app uses.
+    const REPORT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby1kw_vD60m-3s-X95saFzgOY9PrfLQgtnc0YDRJtFmYDiZ57aQiZdS-f9fmCrLSN4-cQ/exec';
+    function reportRPC(type, payload) {
+      return fetch(REPORT_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(Object.assign({ type: type }, payload || {}))
+      }).then(r => r.json());
     }
 
     function renderDenominationMatrix() {
