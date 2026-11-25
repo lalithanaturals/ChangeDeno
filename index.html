@@ -1278,12 +1278,75 @@
       loadStateFromStorage();
       initDateControl();
       renderAllViews();
+      pullStateFromCloud();
+      setInterval(pullStateFromCloud, 60 * 1000);
     });
 
     function saveState() {
       stampNewEntries(appState);
+      appState.updatedAt = Date.now();
       localStorage.setItem('lalitha_cash_app_data_v1.3', JSON.stringify(appState));
+      pushStateToCloud();
     }
+
+    // ---- CLOUD + TAB SYNC ---------------------------------------------------
+    // Same shared Google copy the Denomination app's Cash Locker uses, so
+    // both apps and every device show the same stock. Newest save wins
+    // ("updatedAt"). Role / admin login are never shared.
+    const CLOUD_SYNC_URL = 'https://script.google.com/macros/s/AKfycby1kw_vD60m-3s-X95saFzgOY9PrfLQgtnc0YDRJtFmYDiZ57aQiZdS-f9fmCrLSN4-cQ/exec';
+    let cloudPushTimer = null, cloudPullBusy = false;
+
+    function pushStateToCloud() {
+      clearTimeout(cloudPushTimer);
+      cloudPushTimer = setTimeout(() => {
+        const shared = Object.assign({}, appState);
+        delete shared.role; delete shared.isAdminAuthenticated;
+        fetch(CLOUD_SYNC_URL, {
+          method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'cash_locker', id: 'main', state: shared, updatedAt: appState.updatedAt })
+        }).catch(err => console.error('Cloud push failed', err));
+      }, 1200);
+    }
+
+    function adoptState(incoming, updatedAt) {
+      const keepRole = appState.role, keepAuth = appState.isAdminAuthenticated;
+      appState = incoming;
+      appState.role = keepRole;
+      appState.isAdminAuthenticated = keepAuth;
+      if (updatedAt) appState.updatedAt = updatedAt;
+      if (!appState.storeMinRequirements) appState.storeMinRequirements = DEFAULT_DATA.storeMinRequirements;
+      ['soiledNotes', 'transactions', 'transfers', 'vendorPayments'].forEach(k => { if (!Array.isArray(appState[k])) appState[k] = []; });
+      migrateEntryTimestamps(appState);
+      appState.systemDate = localTodayISO();
+      renderAllViews();
+    }
+
+    function pullStateFromCloud() {
+      if (cloudPullBusy) return;
+      cloudPullBusy = true;
+      fetch(CLOUD_SYNC_URL + '?type=cash_locker')
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.found && data.state && (Number(data.updatedAt) || 0) > (Number(appState.updatedAt) || 0)) {
+            adoptState(data.state, Number(data.updatedAt));
+            try { localStorage.setItem('lalitha_cash_app_data_v1.3', JSON.stringify(appState)); } catch (e) {}
+          }
+        })
+        .catch(err => console.error('Cloud pull failed', err))
+        .finally(() => { cloudPullBusy = false; });
+    }
+
+    // another tab of this site saved → reload now
+    window.addEventListener('storage', (ev) => {
+      if (ev.key !== 'lalitha_cash_app_data_v1.3' || !ev.newValue) return;
+      try {
+        const incoming = JSON.parse(ev.newValue);
+        if ((Number(incoming.updatedAt) || 0) < (Number(appState.updatedAt) || 0)) return;
+        adoptState(incoming, Number(incoming.updatedAt) || 0);
+      } catch (e) { console.error('Tab sync error', e); }
+    });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') pullStateFromCloud(); });
+    window.addEventListener('focus', () => pullStateFromCloud());
 
     function loadStateFromStorage() {
       const saved = localStorage.getItem('lalitha_cash_app_data_v1.3');
