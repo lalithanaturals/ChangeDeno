@@ -44,6 +44,46 @@
     .ae-pill.DAMAGED { background: #fde68a; color: #78350f; } .ae-pill.BANK_DEPOSIT { background: #e0e7ff; color: #3730a3; }
     @media (max-width: 1100px) { .ae-bar { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 640px) { .ae-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ae-search, .ae-custom { grid-column: span 2; } }
+
+    /* ---- Locker Ledger ---- */
+    .lg-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    .lg-top{padding:16px 18px}
+    .lg-titlerow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+    .lg-titlerow h2{margin:0;font-size:18px;font-weight:700;color:#1e293b} .lg-titlerow p{margin:3px 0 0;font-size:12px;color:#64748b}
+    .lg-btns{display:flex;gap:8px} .lg-btn{border:0;border-radius:9px;padding:8px 13px;font-weight:700;font-size:12px;cursor:pointer}
+    .lg-btn.dark{background:#0f172a;color:#fff} .lg-btn.light{background:#f1f5f9;color:#0f172a;border:1px solid #e2e8f0}
+    .lg-tabs{display:flex;gap:4px;margin:14px 0 4px;border-bottom:1px solid #e2e8f0;flex-wrap:wrap}
+    .lg-tab{border:0;background:none;padding:9px 14px;font-weight:700;font-size:13px;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;display:flex;gap:8px;align-items:center}
+    .lg-tab .b{font-family:ui-monospace,monospace;font-size:11px;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:999px}
+    .lg-tab.on{color:#065f46;border-bottom-color:#10b981} .lg-tab.on .b{background:#d1fae5;color:#065f46}
+    .lg-filters{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:10px;margin-top:14px}
+    @media (max-width:900px){.lg-filters{grid-template-columns:repeat(2,1fr)}}
+    .lg-f label{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;color:#64748b;margin-bottom:5px}
+    .lg-f select,.lg-f input{width:100%;border:1px solid #e2e8f0;border-radius:9px;padding:8px 10px;font-size:13px;background:#fff;color:#0f172a}
+    .lg-custom{display:none;gap:10px;margin-top:10px;align-items:center;font-size:12px;color:#475569}
+    .lg-custom input{border:1px solid #e2e8f0;border-radius:8px;padding:6px 8px}
+    .lg-pillrow{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+    .lg-pill{font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;border:1px solid #e2e8f0;background:#fff}
+    .lg-pill.in{color:#047857;background:#ecfdf5;border-color:#a7f3d0} .lg-pill.out{color:#be123c;background:#fff1f2;border-color:#fecdd3}
+    .lg-pill.net{color:#1d4ed8;background:#eff6ff;border-color:#bfdbfe} .lg-pill.cl{color:#065f46;background:#d1fae5;border-color:#6ee7b7}
+    .lg-reset{margin-left:auto;border:1px solid #e2e8f0;background:#fff;border-radius:9px;padding:6px 12px;font-weight:700;font-size:12px;cursor:pointer;display:none}
+    .lg-wrap{overflow-x:auto} .lg-wrap table{border-collapse:collapse;width:100%;font-size:12px;min-width:1250px}
+    .lg-wrap th{background:#0f172a;color:#fff;padding:9px 8px;text-align:left;font-size:10.5px;letter-spacing:.03em;white-space:nowrap}
+    .lg-wrap td{padding:7px 8px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+    .lg-wrap th.q,.lg-wrap td.q{text-align:center;width:52px;font-family:ui-monospace,monospace} .lg-wrap th.q{background:#1e293b}
+    .lg-wrap td.q.pos{color:#047857;font-weight:700;background:#f0fdf4} .lg-wrap td.q.neg{color:#be123c;font-weight:700;background:#fff1f2}
+    .lg-wrap th.amt,.lg-wrap td.amt,.lg-wrap th.bal,.lg-wrap td.bal{text-align:right;white-space:nowrap;font-family:ui-monospace,monospace}
+    .lg-wrap td.amt.pos{color:#047857;font-weight:700} .lg-wrap td.amt.neg{color:#be123c;font-weight:700}
+    .lg-wrap td.bal{font-weight:800;background:#f8fafc} .lg-wrap th.bal{background:#065f46} .lg-wrap th.sb{background:#334155} .lg-wrap td.bal.sb{font-weight:700;color:#334155;background:#fff}
+    .lg-wrap td.dt{white-space:nowrap;font-family:ui-monospace,monospace;font-size:11px} .lg-wrap td.dt span{color:#64748b}
+    .lg-wrap td.ref{font-family:ui-monospace,monospace;font-weight:700;font-size:11px;white-space:nowrap}
+    .lg-chip{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;letter-spacing:.04em} .lg-cat{margin-top:3px;font-weight:600;color:#0f172a}
+    .lg-st{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:999px;white-space:nowrap;background:#e2e8f0;color:#334155}
+    .lg-st.gajuwaka{background:#d1fae5;color:#065f46} .lg-st.kurmannapalem{background:#dbeafe;color:#1e40af}
+    .lg-wrap tr.open td{background:#f8fafc;color:#475569} .lg-wrap tr.close td{background:#ecfdf5;border-top:2px solid #10b981} .lg-wrap tr.close td.bal{background:#d1fae5;color:#065f46;font-size:13px}
+    .lg-wrap tr.val td{background:#f8fafc;color:#475569;font-size:11px}
+    .lg-empty{padding:28px;text-align:center;color:#94a3b8}
+    .lg-note{font-size:11px;color:#64748b;padding:0 4px}
 </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
@@ -124,6 +164,11 @@
           <button onclick="switchTab('all-entries')" id="nav-all-entries" class="w-full flex items-center justify-start space-x-3 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors border-l-4 border-transparent text-left">
             <i class="fa-solid fa-receipt w-5 text-left text-emerald-600 shrink-0"></i>
             <span class="truncate">All Entries</span>
+          </button>
+
+          <button onclick="switchTab('ledger')" id="nav-ledger" class="w-full flex items-center justify-start space-x-3 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors border-l-4 border-transparent text-left">
+            <i class="fa-solid fa-book w-5 text-left text-teal-600 shrink-0"></i>
+            <span class="truncate">Locker Ledger</span>
           </button>
 
           <button onclick="switchTab('vendors')" id="nav-vendors" class="w-full flex items-center justify-start space-x-3 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors border-l-4 border-transparent text-left">
@@ -298,6 +343,29 @@
       </div>
 
       <!-- TAB 2: MINIMUM DENOMINATIONS MANAGER -->
+      <!-- TAB: LOCKER LEDGER -->
+      <div id="tab-ledger" class="hidden space-y-4">
+        <div class="lg-card lg-top">
+          <div class="lg-titlerow">
+            <div><h2>Locker Ledger</h2><p>Denomination-wise movements with the running locker balance — both stores together, or one store at a time</p></div>
+            <div class="lg-btns"><button type="button" class="lg-btn light" onclick="lgPrint()"><i class="fa-solid fa-print mr-1"></i> Print</button><button type="button" class="lg-btn dark" onclick="lgExportCSV()"><i class="fa-solid fa-download mr-1"></i> Export Excel/CSV</button></div>
+          </div>
+          <div class="lg-tabs" id="lgTabs"></div>
+          <div class="lg-filters">
+            <div class="lg-f"><label>DATE</label><select id="lgDate" onchange="lgDateChanged()"><option value="all">All time</option><option value="today">Today</option><option value="yesterday">Yesterday</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="month">This month</option><option value="lastmonth">Last month</option><option value="custom">Custom range…</option></select></div>
+            <div class="lg-f"><label>ENTRY TYPE</label><select id="lgType" onchange="renderLedgerTab()"><option value="all">All types</option><option value="VENDOR">Vendor change</option><option value="TRANSFER_IN">Transfer in</option><option value="TRANSFER_OUT">Transfer out</option><option value="TRAY">Cash added (to tray)</option><option value="TRAY_RETURN">Returned to locker</option><option value="CASH_IN">Cash in</option><option value="CASH_OUT">Cash out</option><option value="DAMAGED">Damaged notes</option></select></div>
+            <div class="lg-f"><label>MONEY</label><select id="lgMoney" onchange="renderLedgerTab()"><option value="all">In &amp; Out</option><option value="in">Money in only</option><option value="out">Money out only</option></select></div>
+            <div class="lg-f"><label>SORT BY</label><select id="lgSort" onchange="renderLedgerTab()"><option value="old">Date — oldest first</option><option value="new">Date — newest first</option><option value="hi">Amount — high to low</option><option value="lo">Amount — low to high</option></select></div>
+            <div class="lg-f"><label>SEARCH</label><input id="lgSearch" placeholder="Ref ID, employee, note…" oninput="renderLedgerTab()"></div>
+          </div>
+          <div class="lg-custom" id="lgCustom">From <input type="date" id="lgFrom" onchange="renderLedgerTab()"> to <input type="date" id="lgTo" onchange="renderLedgerTab()"></div>
+          <div class="lg-pillrow"><span class="lg-pill" id="lgCount"></span><span class="lg-pill in" id="lgIn"></span><span class="lg-pill out" id="lgOut"></span><span class="lg-pill net" id="lgNet"></span><span class="lg-pill cl" id="lgClose"></span>
+            <button type="button" class="lg-reset" id="lgReset" onclick="lgResetFilters()">↺ Reset filters</button></div>
+        </div>
+        <div class="lg-card lg-wrap" id="lgTable"></div>
+        <div class="lg-note">Balance always shows the true running locker value after that entry (worked out over the full history), even when filters hide other rows. Closing rows always equal the Cash Denominations page.</div>
+      </div>
+
       <div id="tab-min-requirements" class="hidden space-y-6">
         <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -1583,7 +1651,7 @@
     }
 
     function switchTab(tabId) {
-      const tabs = ['dashboard', 'all-entries', 'denominations', 'min-requirements', 'branches', 'transfers', 'vendors', 'soiled'];
+      const tabs = ['dashboard', 'all-entries', 'ledger', 'denominations', 'min-requirements', 'branches', 'transfers', 'vendors', 'soiled'];
       tabs.forEach(t => {
         const el = document.getElementById(`tab-${t}`);
         const nav = document.getElementById(`nav-${t}`);
@@ -1618,6 +1686,7 @@
       if (typeof updateAdminToggleBtn === 'function') updateAdminToggleBtn();
       renderKPIs();
       renderAllEntriesTab();
+      if (typeof renderLedgerTab === 'function') renderLedgerTab();
       renderDenominationMatrix();
       renderMinRequirementsTab();
       renderBranchOverview();
@@ -2385,6 +2454,165 @@
         else if (res && res.ok && !res.none) alert('The Google Apps Script is an older version — update and deploy it first.');
         else if (res && !res.ok) alert('The low change email could not be sent: ' + (res.error || 'unknown error'));
       }).finally(() => { if (btn) btn.disabled = false; });
+    }
+
+    // ===================== LOCKER LEDGER =====================
+    // Every locker movement as a ledger: +/− pieces per denomination, the
+    // amount, and the running locker balance. Built from appState.transactions
+    // (what actually moved in/out of usable stock — fromStock for Cash Added).
+    // A starting balance is derived so each store's closing figures always
+    // equal the live Cash Denominations stock.
+    let lgStore = 'all';
+    const LG_KIND = {
+      VENDOR: ['VENDOR', '#7c3aed', '#f5f3ff'], TRANSFER_IN: ['TRANSFER IN', '#1d4ed8', '#eff6ff'], TRANSFER_OUT: ['TRANSFER OUT', '#1d4ed8', '#eff6ff'],
+      TRAY: ['CASH ADDED', '#b45309', '#fffbeb'], TRAY_RETURN: ['RETURNED', '#b45309', '#fffbeb'], CASH_IN: ['CASH IN', '#047857', '#ecfdf5'],
+      CASH_OUT: ['CASH OUT', '#be123c', '#fff1f2'], DAMAGED: ['DAMAGED', '#9a3412', '#fff7ed']
+    };
+    function lgInr(n) { return (n < 0 ? '-' : '') + '₹' + Math.abs(Math.round(n)).toLocaleString('en-IN'); }
+    function lgStoreName(k) { return String(k || '').charAt(0).toUpperCase() + String(k || '').slice(1); }
+    function lgBuild() {
+      const stores = Object.keys(appState.branches || {});
+      const rows = [];
+      (appState.transactions || []).forEach((t, idx) => {
+        let kind = aeEntryKind(t);
+        if (kind === 'BANK_DEPOSIT') return; // from the damaged vault, not usable stock
+        const b = lockerResolveBranchKey(t.branch) || String(t.branch || '').toLowerCase();
+        if (stores.indexOf(b) === -1) return;
+        if (kind === 'TRANSFER') kind = Number(t.amount) < 0 ? 'TRANSFER_OUT' : 'TRANSFER_IN';
+        const map = t.fromStock || t.denoms || {};
+        const sign = Number(t.amount) < 0 ? -1 : 1;
+        const q = DENOM_CONFIG.map(d => sign * (Number(map[d.key]) || 0));
+        const amt = q.reduce((a, v, i) => a + v * DENOM_CONFIG[i].val, 0);
+        if (!amt && !q.some(Boolean)) return;
+        rows.push({ t, idx, b, kind, q, amt, ts: aeEntryTime(t) || 0, ref: t.refId || '', h: t.handler || '', cat: t.category || '' });
+      });
+      rows.sort((x, y) => x.ts - y.ts || (/-OUT$/.test(x.ref) && /-IN$/.test(y.ref) ? -1 : /-IN$/.test(x.ref) && /-OUT$/.test(y.ref) ? 1 : x.idx - y.idx));
+      const led = {};
+      stores.forEach(k => {
+        const live = DENOM_CONFIG.map(d => Number((appState.branches[k] || {})[d.key]) || 0);
+        const mine = rows.filter(r => r.b === k);
+        const moved = DENOM_CONFIG.map((d, i) => mine.reduce((a, r) => a + r.q[i], 0));
+        const open = live.map((v, i) => v - moved[i]);
+        const openVal = open.reduce((a, v, i) => a + v * DENOM_CONFIG[i].val, 0);
+        let bal = openVal;
+        mine.forEach(r => { bal += r.amt; r.bal = bal; });
+        led[k] = { open, openVal, qty: live, bal: live.reduce((a, v, i) => a + v * DENOM_CONFIG[i].val, 0) };
+      });
+      const allOpen = DENOM_CONFIG.map((d, i) => stores.reduce((a, k) => a + led[k].open[i], 0));
+      const allOpenVal = stores.reduce((a, k) => a + led[k].openVal, 0);
+      let tot = allOpenVal;
+      rows.forEach(r => { tot += r.amt; r.tot = tot; });
+      led.all = { open: allOpen, openVal: allOpenVal, qty: DENOM_CONFIG.map((d, i) => stores.reduce((a, k) => a + led[k].qty[i], 0)), bal: stores.reduce((a, k) => a + led[k].bal, 0) };
+      return { stores, rows, led };
+    }
+    function lgRange() {
+      const v = document.getElementById('lgDate').value, n = new Date(), day = 86400000;
+      const t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate()).getTime();
+      if (v === 'today') return [t0, t0 + day];
+      if (v === 'yesterday') return [t0 - day, t0];
+      if (v === '7') return [t0 - 6 * day, t0 + day];
+      if (v === '30') return [t0 - 29 * day, t0 + day];
+      if (v === 'month') return [new Date(n.getFullYear(), n.getMonth(), 1).getTime(), new Date(n.getFullYear(), n.getMonth() + 1, 1).getTime()];
+      if (v === 'lastmonth') return [new Date(n.getFullYear(), n.getMonth() - 1, 1).getTime(), new Date(n.getFullYear(), n.getMonth(), 1).getTime()];
+      if (v === 'custom') {
+        const f = document.getElementById('lgFrom').value, to = document.getElementById('lgTo').value;
+        return [f ? new Date(f + 'T00:00').getTime() : -Infinity, to ? new Date(to + 'T00:00').getTime() + day : Infinity];
+      }
+      return [-Infinity, Infinity];
+    }
+    function lgDateChanged() {
+      document.getElementById('lgCustom').style.display = document.getElementById('lgDate').value === 'custom' ? 'flex' : 'none';
+      renderLedgerTab();
+    }
+    function lgActiveCount() {
+      return [document.getElementById('lgDate').value !== 'all', document.getElementById('lgType').value !== 'all', document.getElementById('lgMoney').value !== 'all',
+        document.getElementById('lgSort').value !== 'old', document.getElementById('lgSearch').value.trim() !== ''].filter(Boolean).length;
+    }
+    function lgResetFilters() {
+      ['lgDate', 'lgType', 'lgMoney'].forEach(id => document.getElementById(id).value = 'all');
+      document.getElementById('lgSort').value = 'old';
+      document.getElementById('lgSearch').value = '';
+      document.getElementById('lgFrom').value = '';
+      document.getElementById('lgTo').value = '';
+      lgDateChanged();
+    }
+    function lgFiltered(data) {
+      const [a, z] = lgRange(), q = document.getElementById('lgSearch').value.trim().toLowerCase();
+      const type = document.getElementById('lgType').value, money = document.getElementById('lgMoney').value, sort = document.getElementById('lgSort').value;
+      let r = data.rows.filter(x => (lgStore === 'all' || x.b === lgStore) && x.ts >= a && x.ts < z && (type === 'all' || x.kind === type) &&
+        (money === 'all' || (money === 'in' ? x.amt > 0 : x.amt < 0)) &&
+        (!q || (x.ref + ' ' + x.h + ' ' + x.cat + ' ' + (x.t.remarks || '')).toLowerCase().indexOf(q) !== -1));
+      r = r.slice();
+      if (sort === 'new') r.reverse();
+      else if (sort === 'hi') r.sort((x, y) => Math.abs(y.amt) - Math.abs(x.amt));
+      else if (sort === 'lo') r.sort((x, y) => Math.abs(x.amt) - Math.abs(y.amt));
+      return r;
+    }
+    function lgFmt(ts) {
+      if (!ts) return ['—', ''];
+      const d = new Date(ts);
+      return [d.toLocaleDateString('en-GB'), d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })];
+    }
+    function renderLedgerTab() {
+      const tabsEl = document.getElementById('lgTabs');
+      if (!tabsEl) return;
+      const data = lgBuild();
+      if (lgStore !== 'all' && data.stores.indexOf(lgStore) === -1) lgStore = 'all';
+      tabsEl.innerHTML = [['all', 'All stores']].concat(data.stores.map(k => [k, lgStoreName(k)])).map(([k, n]) =>
+        `<button type="button" class="lg-tab ${k === lgStore ? 'on' : ''}" onclick="lgStore='${k}';renderLedgerTab()">${n} <span class="b">${lgInr(data.led[k].bal)}</span></button>`).join('');
+      const led = data.led[lgStore], ALL = lgStore === 'all';
+      const r = lgFiltered(data);
+      let tin = 0, tout = 0;
+      r.forEach(x => { if (x.amt > 0) tin += x.amt; else tout -= x.amt; });
+      const n = lgActiveCount();
+      document.getElementById('lgCount').textContent = r.length + ' entries' + (n ? ' · ' + n + ' filter' + (n > 1 ? 's' : '') + ' on' : '');
+      document.getElementById('lgIn').textContent = 'In ' + lgInr(tin);
+      document.getElementById('lgOut').textContent = 'Out ' + lgInr(tout);
+      document.getElementById('lgNet').textContent = 'Net ' + (tin - tout >= 0 ? '+' : '') + lgInr(tin - tout);
+      document.getElementById('lgClose').textContent = 'Closing ' + lgInr(led.bal);
+      document.getElementById('lgReset').style.display = n ? 'inline-block' : 'none';
+      const span = ALL ? 4 : 3, extra = ALL ? '<td></td>' : '';
+      const head = `<thead><tr><th>Date &amp; Time</th><th>Ref ID</th>${ALL ? '<th>Store</th>' : ''}<th>Particulars</th><th>Employee</th>${DENOM_CONFIG.map(d => `<th class="q">₹${d.label}</th>`).join('')}<th class="amt">Amount</th>${ALL ? '<th class="bal sb">Store Balance</th><th class="bal">Total Balance</th>' : '<th class="bal">Balance</th>'}</tr></thead>`;
+      const showOpen = (led.openVal || led.open.some(Boolean)) && document.getElementById('lgSort').value === 'old' && !n;
+      const openRow = showOpen
+        ? `<tr class="open"><td>—</td><td colspan="${span}"><b>Opening Balance</b> <span style="font-size:10.5px">(stock before the first entry listed)</span></td>${led.open.map(v => `<td class="q">${v}</td>`).join('')}<td></td>${extra}<td class="bal">${lgInr(led.openVal)}</td></tr>` : '';
+      const body = r.map(x => {
+        const [d, tm] = lgFmt(x.ts), k = LG_KIND[x.kind] || ['ENTRY', '#334155', '#f1f5f9'];
+        return `<tr><td class="dt">${d}<br><span>${tm}</span></td><td class="ref">${x.ref}</td>${ALL ? `<td><span class="lg-st ${x.b}">${lgStoreName(x.b)}</span></td>` : ''}` +
+          `<td><span class="lg-chip" style="color:${k[1]};background:${k[2]}">${k[0]}</span><div class="lg-cat">${x.cat}</div></td><td>${x.h}</td>` +
+          x.q.map(v => v ? `<td class="q ${v > 0 ? 'pos' : 'neg'}">${v > 0 ? '+' : '−'}${Math.abs(v)}</td>` : '<td class="q"></td>').join('') +
+          `<td class="amt ${x.amt > 0 ? 'pos' : 'neg'}">${x.amt > 0 ? '+' : '−'}${lgInr(Math.abs(x.amt))}</td>` +
+          (ALL ? `<td class="bal sb">${lgInr(x.bal)}</td><td class="bal">${lgInr(x.tot)}</td>` : `<td class="bal">${lgInr(x.bal)}</td>`) + '</tr>';
+      }).join('') || `<tr><td colspan="${ALL ? 17 : 15}" class="lg-empty">No entries match these filters.</td></tr>`;
+      const split = ALL ? `<tr class="val"><td></td><td colspan="${span}">${data.stores.map(k => lgStoreName(k) + ': <b>' + lgInr(data.led[k].bal) + '</b>').join(' &nbsp;·&nbsp; ')}</td>${DENOM_CONFIG.map((d, i) => `<td class="q">${data.stores.map(k => data.led[k].qty[i]).join(' / ')}</td>`).join('')}<td colspan="3" style="text-align:right">pcs: ${data.stores.map(lgStoreName).join(' / ')}</td></tr>` : '';
+      const foot = `<tfoot><tr class="close"><td>—</td><td colspan="${span}"><b>${ALL ? 'Closing Balance — all stores (pcs in locker)' : 'Closing Balance (pcs in locker)'}</b></td>${led.qty.map(v => `<td class="q"><b>${v}</b></td>`).join('')}<td></td>${extra}<td class="bal">${lgInr(led.bal)}</td></tr>` +
+        `<tr class="val"><td></td><td colspan="${span}">Closing value per denomination</td>${led.qty.map((v, i) => `<td class="q">${v ? lgInr(v * DENOM_CONFIG[i].val) : '—'}</td>`).join('')}<td></td>${extra}<td></td></tr>${split}</tfoot>`;
+      document.getElementById('lgTable').innerHTML = `<table>${head}<tbody>${openRow}${body}</tbody>${foot}</table>`;
+      window.__lgRows = r;
+    }
+    function lgExportCSV() {
+      const r = window.__lgRows || [], ALL = lgStore === 'all';
+      const header = ['Date', 'Time', 'Ref ID', 'Store', 'Type', 'Particulars', 'Employee'].concat(DENOM_CONFIG.map(d => '₹' + d.label), ['Amount', ALL ? 'Store Balance' : 'Balance'], ALL ? ['Total Balance'] : []);
+      const rows = [header].concat(r.map(x => {
+        const [d, tm] = lgFmt(x.ts);
+        return [d, tm, x.ref, lgStoreName(x.b), (LG_KIND[x.kind] || [''])[0], x.cat, x.h].concat(x.q, [x.amt, x.bal], ALL ? [x.tot] : []);
+      }));
+      const csv = rows.map(row => row.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
+      a.download = 'Locker_Ledger_' + (ALL ? 'All_Stores' : lgStoreName(lgStore)) + '_' + new Date().toISOString().split('T')[0] + '.csv';
+      a.click();
+    }
+    function lgPrint() {
+      const table = document.getElementById('lgTable').innerHTML;
+      const title = 'Locker Ledger — ' + (lgStore === 'all' ? 'All stores' : lgStoreName(lgStore));
+      const css = Array.from(document.querySelectorAll('style')).map(st => st.textContent).filter(t => t.indexOf('.lg-wrap') !== -1).join('\n');
+      const w = window.open('', '_blank');
+      if (!w) return alert('Please allow pop-ups to print the ledger.');
+      w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title}</title><style>${css} body{font-family:Arial,sans-serif;margin:16px} @page{size:A4 landscape;margin:10mm} .lg-wrap table{min-width:0;font-size:10px}</style></head><body><h2 style="margin:0 0 4px">Lalitha Naturals — ${title}</h2><div style="font-size:11px;color:#64748b;margin-bottom:10px">Printed ${new Date().toLocaleString('en-IN')} · ${document.getElementById('lgCount').textContent}</div><div class="lg-wrap">${table}</div></body></html>`);
+      w.document.close();
+      w.focus();
+      setTimeout(() => w.print(), 300);
     }
 
     function renderWarnings() {
