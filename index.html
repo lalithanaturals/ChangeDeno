@@ -1654,6 +1654,10 @@
       document.getElementById('dash-kurmannapalem-large').innerText = `₹${calcGroup('kurmannapalem', ['n100','n200','n500']).toLocaleString('en-IN')}`;
     }
 
+    // ₹500 / ₹200 / ₹100 have no minimum stock: not shown on the Minimum
+    // Denominations page and never alerted (in the app or by email).
+    const MIN_EXCLUDED_DENOMS = ['n500', 'n200', 'n100'];
+    function minTracked(key) { return MIN_EXCLUDED_DENOMS.indexOf(key) === -1; }
     function renderMinRequirementsTab() {
       const tbody = document.getElementById('min-req-tbody');
       const badge = document.getElementById('minReqAdminBadge');
@@ -1672,6 +1676,7 @@
 
       tbody.innerHTML = '';
       DENOM_CONFIG.forEach(d => {
+        if (!minTracked(d.key)) return;
         const gQty = appState.branches.gajuwaka[d.key] || 0;
         const gVal = gQty * d.val;
         const kQty = appState.branches.kurmannapalem[d.key] || 0;
@@ -1725,6 +1730,7 @@
         const gInp = document.getElementById(`min-gajuwaka-${d.key}`);
         const kInp = document.getElementById(`min-kurmannapalem-${d.key}`);
 
+        if (!minTracked(d.key)) { appState.storeMinRequirements.gajuwaka[d.key] = 0; appState.storeMinRequirements.kurmannapalem[d.key] = 0; return; }
         if (gInp) appState.storeMinRequirements.gajuwaka[d.key] = parseInt(gInp.value) || 0;
         if (kInp) appState.storeMinRequirements.kurmannapalem[d.key] = parseInt(kInp.value) || 0;
       });
@@ -2321,7 +2327,7 @@
     function lowStoreRows(bKey) {
       const stock = (appState.branches || {})[bKey] || {};
       const mins = (appState.storeMinRequirements || {})[bKey] || {};
-      return DENOM_CONFIG.map(d => {
+      return DENOM_CONFIG.filter(d => minTracked(d.key)).map(d => {
         const qty = Number(stock[d.key]) || 0, min = Number(mins[d.key]) || 0;
         return { key: d.key, label: '₹' + d.label, qty, min, short: Math.max(0, min - qty), low: min > 0 && qty <= min, amount: qty * d.val };
       });
@@ -2390,7 +2396,7 @@
         DENOM_CONFIG.forEach(d => {
           const qty = appState.branches[b][d.key] || 0;
           const minReq = appState.storeMinRequirements?.[b]?.[d.key] || 0;
-          if (minReq > 0 && qty <= minReq) {
+          if (minTracked(d.key) && minReq > 0 && qty <= minReq) {
             warnings.push({ branch: b, denom: d.label, qty, min: minReq });
           }
         });
