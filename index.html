@@ -304,7 +304,10 @@
             <h2 class="text-base sm:text-lg font-bold text-slate-800">Minimum Denominations</h2>
             <p class="text-xs text-slate-500">Configure separate minimum denomination stock requirements for Gajuwaka and Kurmannapalem</p>
           </div>
-          <div id="minReqAdminBadge" class="text-xs font-bold px-3 py-1.5 rounded-lg border"></div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" id="lowChangeEmailBtn" onclick="emailLowChangeNow()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow"><i class="fa-solid fa-envelope mr-1"></i><span>Email Low Change Alert</span></button>
+            <div id="minReqAdminBadge" class="text-xs font-bold px-3 py-1.5 rounded-lg border"></div>
+          </div>
         </div>
 
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -1353,6 +1356,7 @@
       appState.updatedAt = Date.now();
       localStorage.setItem('lalitha_cash_app_data_v1.3', JSON.stringify(appState));
       pushStateToCloud();
+      if (!window.__lowAlertSkip) setTimeout(function () { try { checkLowChangeAlert(false); } catch (e) { console.error('Low change check', e); } }, 0);
     }
 
     // ---- CLOUD + TAB SYNC ---------------------------------------------------
@@ -2305,6 +2309,78 @@
       });
     }
 
+    // ===================== LOW CHANGE ALERT EMAIL =====================
+    // After every save, any store whose count of a denomination is at or
+    // below its Minimum Denominations setting is emailed (one PDF per store,
+    // subject "Low change in <store>" / "<store> & <store>"). Each low
+    // denomination is alerted once; it can alert again only after it has been
+    // refilled above the minimum. Shared via appState.lowChangeAlert, so the
+    // Cash Locker and ChangeDeno don't both send the same alert.
+    let lowAlertInFlight = false;
+    function lowStoreName(k) { return String(k || '').charAt(0).toUpperCase() + String(k || '').slice(1); }
+    function lowStoreRows(bKey) {
+      const stock = (appState.branches || {})[bKey] || {};
+      const mins = (appState.storeMinRequirements || {})[bKey] || {};
+      return DENOM_CONFIG.map(d => {
+        const qty = Number(stock[d.key]) || 0, min = Number(mins[d.key]) || 0;
+        return { key: d.key, label: '₹' + d.label, qty, min, short: Math.max(0, min - qty), low: min > 0 && qty <= min, amount: qty * d.val };
+      });
+    }
+    function lowPersistMarks(marks) {
+      appState.lowChangeAlert = marks;
+      window.__lowAlertSkip = true;
+      try { saveState(); } finally { window.__lowAlertSkip = false; }
+    }
+    function checkLowChangeAlert(force) {
+      if (lowAlertInFlight || !appState || !appState.branches) return Promise.resolve(null);
+      const prev = Object.assign({}, appState.lowChangeAlert || {});
+      const kept = {}, toAlert = [];
+      Object.keys(appState.branches).forEach(bKey => {
+        const rows = lowStoreRows(bKey);
+        const lowKeys = rows.filter(r => r.low).map(r => r.key);
+        const prevKeys = String(prev[bKey] || '').split(',').filter(Boolean);
+        kept[bKey] = lowKeys.filter(k => prevKeys.indexOf(k) !== -1).join(',');
+        if (lowKeys.length && (force || lowKeys.some(k => prevKeys.indexOf(k) === -1))) {
+          toAlert.push({ key: bKey, name: lowStoreName(bKey), rows, lowKeys,
+            totalQty: rows.reduce((a, r) => a + r.qty, 0), totalAmount: rows.reduce((a, r) => a + r.amount, 0) });
+        }
+      });
+      // A denomination refilled above its minimum is forgotten, so it alerts again if it drops later.
+      const changed = Object.keys(Object.assign({}, prev, kept)).some(k => (prev[k] || '') !== (kept[k] || ''));
+      if (changed && !toAlert.length) lowPersistMarks(Object.assign({}, prev, kept));
+      if (!toAlert.length) return Promise.resolve({ ok: true, none: true });
+      lowAlertInFlight = true;
+      const now = new Date();
+      const payload = {
+        store: { name: 'Lalitha Naturals' },
+        generatedAt: now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        stores: toAlert.map(s => ({ key: s.key, name: s.name, rows: s.rows, totalQty: s.totalQty, totalAmount: s.totalAmount }))
+      };
+      return Promise.resolve().then(() => reportRPC('low_change_email', payload)).then(res => {
+        if (res && res.ok && res.type === 'low_change_email') {
+          const marks = Object.assign({}, prev, kept);
+          toAlert.forEach(s => { marks[s.key] = s.lowKeys.join(','); });
+          lowPersistMarks(marks);
+          if (typeof showAppToast === 'function') showAppToast('📧 ' + res.subject + ' — emailed.');
+        } else {
+          console.error('Low change email failed', res);
+        }
+        return res;
+      }).catch(err => { console.error('Low change email error', err); return { ok: false, error: String(err && err.message || err) }; })
+        .finally(() => { lowAlertInFlight = false; });
+    }
+    function emailLowChangeNow() {
+      const anyLow = Object.keys(appState.branches || {}).some(k => lowStoreRows(k).some(r => r.low));
+      if (!anyLow) return alert('No store is at or below its minimum right now — nothing to send.');
+      const btn = document.getElementById('lowChangeEmailBtn');
+      if (btn) btn.disabled = true;
+      checkLowChangeAlert(true).then(res => {
+        if (res && res.ok && res.type === 'low_change_email') alert('✅ "' + res.subject + '" emailed to ' + res.to + ' (' + res.pdfs + ' PDF' + (res.pdfs > 1 ? 's' : '') + ').');
+        else if (res && res.ok && !res.none) alert('The Google Apps Script is an older version — update and deploy it first.');
+        else if (res && !res.ok) alert('The low change email could not be sent: ' + (res.error || 'unknown error'));
+      }).finally(() => { if (btn) btn.disabled = false; });
+    }
+
     function renderWarnings() {
       const container = document.getElementById('low-stock-warnings');
       container.innerHTML = '';
@@ -2314,7 +2390,7 @@
         DENOM_CONFIG.forEach(d => {
           const qty = appState.branches[b][d.key] || 0;
           const minReq = appState.storeMinRequirements?.[b]?.[d.key] || 0;
-          if (qty < minReq) {
+          if (minReq > 0 && qty <= minReq) {
             warnings.push({ branch: b, denom: d.label, qty, min: minReq });
           }
         });
