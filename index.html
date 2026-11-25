@@ -56,8 +56,8 @@
     .lg-tab{border:0;background:none;padding:9px 14px;font-weight:700;font-size:13px;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;display:flex;gap:8px;align-items:center}
     .lg-tab .b{font-family:ui-monospace,monospace;font-size:11px;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:999px}
     .lg-tab.on{color:#065f46;border-bottom-color:#10b981} .lg-tab.on .b{background:#d1fae5;color:#065f46}
-    .lg-filters{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:10px;margin-top:14px}
-    @media (max-width:900px){.lg-filters{grid-template-columns:repeat(2,1fr)}}
+    .lg-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:14px}
+    .lg-f{min-width:0} .lg-top{overflow:hidden} .lg-tab{white-space:nowrap} .lg-f select,.lg-f input,.lg-custom input{box-sizing:border-box;max-width:100%}
     .lg-f label{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;color:#64748b;margin-bottom:5px}
     .lg-f select,.lg-f input{width:100%;border:1px solid #e2e8f0;border-radius:9px;padding:8px 10px;font-size:13px;background:#fff;color:#0f172a}
     .lg-custom{display:none;gap:10px;margin-top:10px;align-items:center;font-size:12px;color:#475569}
@@ -67,17 +67,31 @@
     .lg-pill.in{color:#047857;background:#ecfdf5;border-color:#a7f3d0} .lg-pill.out{color:#be123c;background:#fff1f2;border-color:#fecdd3}
     .lg-pill.net{color:#1d4ed8;background:#eff6ff;border-color:#bfdbfe} .lg-pill.cl{color:#065f46;background:#d1fae5;border-color:#6ee7b7}
     .lg-reset{margin-left:auto;border:1px solid #e2e8f0;background:#fff;border-radius:9px;padding:6px 12px;font-weight:700;font-size:12px;cursor:pointer;display:none}
-    .lg-wrap{overflow-x:auto} .lg-wrap table{border-collapse:collapse;width:100%;font-size:12px;min-width:1250px}
-    .lg-wrap th{background:#0f172a;color:#fff;padding:9px 8px;text-align:left;font-size:10.5px;letter-spacing:.03em;white-space:nowrap}
-    .lg-wrap td{padding:7px 8px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
-    .lg-wrap th.q,.lg-wrap td.q{text-align:center;width:52px;font-family:ui-monospace,monospace} .lg-wrap th.q{background:#1e293b}
+    .lg-wrap{container-type:inline-size;overflow:hidden} .lg-wrap table{border-collapse:collapse;width:100%;font-size:12px;table-layout:auto}
+    .lg-cards{display:none}
+    @container (max-width: 760px){ .lg-wrap table{display:none} .lg-cards{display:block} }
+    .lg-card-row{padding:10px 12px;border-bottom:1px solid #f1f5f9}
+    .lg-card-row .l1{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .lg-card-row .meta{font-size:10.5px;color:#64748b;font-family:ui-monospace,monospace;word-break:break-all}
+    .lg-card-row .amtv{font-family:ui-monospace,monospace;font-weight:800;white-space:nowrap;font-size:13px}
+    .lg-card-row .amtv.pos{color:#047857} .lg-card-row .amtv.neg{color:#be123c}
+    .lg-dn{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+    .lg-dn span{font-size:10.5px;font-weight:700;font-family:ui-monospace,monospace;padding:2px 6px;border-radius:5px}
+    .lg-dn .pos{background:#f0fdf4;color:#047857} .lg-dn .neg{background:#fff1f2;color:#be123c}
+    .lg-card-row .bals{display:flex;justify-content:flex-end;gap:10px;margin-top:6px;font-size:11px;color:#475569;font-family:ui-monospace,monospace}
+    .lg-card-row .bals b{color:#065f46}
+    .lg-card-row.close{background:#ecfdf5;border-top:2px solid #10b981}
+    .lg-card-row.close .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:6px;font-size:11px;font-family:ui-monospace,monospace}
+    .lg-wrap th{background:#0f172a;color:#fff;padding:8px 5px;text-align:left;font-size:10px;letter-spacing:.02em;white-space:nowrap}
+    .lg-wrap td{padding:6px 5px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+    .lg-wrap th.q,.lg-wrap td.q{text-align:center;font-family:ui-monospace,monospace;font-size:11px} .lg-wrap th.q{background:#1e293b}
     .lg-wrap td.q.pos{color:#047857;font-weight:700;background:#f0fdf4} .lg-wrap td.q.neg{color:#be123c;font-weight:700;background:#fff1f2}
     .lg-wrap th.amt,.lg-wrap td.amt,.lg-wrap th.bal,.lg-wrap td.bal{text-align:right;white-space:nowrap;font-family:ui-monospace,monospace}
     .lg-wrap td.amt.pos{color:#047857;font-weight:700} .lg-wrap td.amt.neg{color:#be123c;font-weight:700}
     .lg-wrap td.bal{font-weight:800;background:#f8fafc} .lg-wrap th.bal{background:#065f46} .lg-wrap th.sb{background:#334155} .lg-wrap td.bal.sb{font-weight:700;color:#334155;background:#fff}
-    .lg-wrap td.dt{white-space:nowrap;font-family:ui-monospace,monospace;font-size:11px} .lg-wrap td.dt span{color:#64748b}
+    .lg-wrap td.dt{font-family:ui-monospace,monospace;font-size:10.5px;line-height:1.35} .lg-wrap td.dt span{color:#64748b} .lg-wrap td.dt .r{display:block;font-weight:700;color:#0f172a;word-break:break-all;font-size:10px;margin-top:2px}
     .lg-wrap td.ref{font-family:ui-monospace,monospace;font-weight:700;font-size:11px;white-space:nowrap}
-    .lg-chip{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;letter-spacing:.04em} .lg-cat{margin-top:3px;font-weight:600;color:#0f172a}
+    .lg-chip{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;letter-spacing:.04em} .lg-cat{margin-top:3px;font-weight:600;color:#0f172a;line-height:1.3} .lg-by{font-size:10.5px;color:#64748b;margin-top:1px}
     .lg-st{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:999px;white-space:nowrap;background:#e2e8f0;color:#334155}
     .lg-st.gajuwaka{background:#d1fae5;color:#065f46} .lg-st.kurmannapalem{background:#dbeafe;color:#1e40af}
     .lg-wrap tr.open td{background:#f8fafc;color:#475569} .lg-wrap tr.close td{background:#ecfdf5;border-top:2px solid #10b981} .lg-wrap tr.close td.bal{background:#d1fae5;color:#065f46;font-size:13px}
@@ -2571,23 +2585,38 @@
       document.getElementById('lgNet').textContent = 'Net ' + (tin - tout >= 0 ? '+' : '') + lgInr(tin - tout);
       document.getElementById('lgClose').textContent = 'Closing ' + lgInr(led.bal);
       document.getElementById('lgReset').style.display = n ? 'inline-block' : 'none';
-      const span = ALL ? 4 : 3, extra = ALL ? '<td></td>' : '';
-      const head = `<thead><tr><th>Date &amp; Time</th><th>Ref ID</th>${ALL ? '<th>Store</th>' : ''}<th>Particulars</th><th>Employee</th>${DENOM_CONFIG.map(d => `<th class="q">₹${d.label}</th>`).join('')}<th class="amt">Amount</th>${ALL ? '<th class="bal sb">Store Balance</th><th class="bal">Total Balance</th>' : '<th class="bal">Balance</th>'}</tr></thead>`;
+      // Only the denominations that appear in this tab (moved, held now, or held at the start).
+      const storeRows = data.rows.filter(x => ALL || x.b === lgStore);
+      const DI = DENOM_CONFIG.map((d, i) => i).filter(i => led.qty[i] || led.open[i] || storeRows.some(x => x.q[i]));
+      const extra = ALL ? '<td></td>' : '';
+      const span = 2 + DI.length;
+      const head = `<thead><tr><th>Date / Ref</th><th>Particulars</th>${DI.map(i => `<th class="q">₹${DENOM_CONFIG[i].label}</th>`).join('')}<th class="amt">Amount</th>${ALL ? '<th class="bal sb">Store Bal.</th><th class="bal">Total Bal.</th>' : '<th class="bal">Balance</th>'}</tr></thead>`;
       const showOpen = (led.openVal || led.open.some(Boolean)) && document.getElementById('lgSort').value === 'old' && !n;
       const openRow = showOpen
-        ? `<tr class="open"><td>—</td><td colspan="${span}"><b>Opening Balance</b> <span style="font-size:10.5px">(stock before the first entry listed)</span></td>${led.open.map(v => `<td class="q">${v}</td>`).join('')}<td></td>${extra}<td class="bal">${lgInr(led.openVal)}</td></tr>` : '';
+        ? `<tr class="open"><td colspan="2"><b>Opening Balance</b> <span style="font-size:10px">(stock before the first entry listed)</span></td>${DI.map(i => `<td class="q">${led.open[i]}</td>`).join('')}<td></td>${extra}<td class="bal">${lgInr(led.openVal)}</td></tr>` : '';
+      const partic = x => { const k = LG_KIND[x.kind] || ['ENTRY', '#334155', '#f1f5f9'];
+        return `${ALL ? `<span class="lg-st ${x.b}">${lgStoreName(x.b)}</span> ` : ''}<span class="lg-chip" style="color:${k[1]};background:${k[2]}">${k[0]}</span><div class="lg-cat">${x.cat}</div>${x.h ? `<div class="lg-by">by ${x.h}</div>` : ''}`; };
       const body = r.map(x => {
-        const [d, tm] = lgFmt(x.ts), k = LG_KIND[x.kind] || ['ENTRY', '#334155', '#f1f5f9'];
-        return `<tr><td class="dt">${d}<br><span>${tm}</span></td><td class="ref">${x.ref}</td>${ALL ? `<td><span class="lg-st ${x.b}">${lgStoreName(x.b)}</span></td>` : ''}` +
-          `<td><span class="lg-chip" style="color:${k[1]};background:${k[2]}">${k[0]}</span><div class="lg-cat">${x.cat}</div></td><td>${x.h}</td>` +
-          x.q.map(v => v ? `<td class="q ${v > 0 ? 'pos' : 'neg'}">${v > 0 ? '+' : '−'}${Math.abs(v)}</td>` : '<td class="q"></td>').join('') +
+        const [d, tm] = lgFmt(x.ts);
+        return `<tr><td class="dt">${d} <span>${tm}</span><span class="r">${x.ref}</span></td><td>${partic(x)}</td>` +
+          DI.map(i => { const v = x.q[i]; return v ? `<td class="q ${v > 0 ? 'pos' : 'neg'}">${v > 0 ? '+' : '−'}${Math.abs(v)}</td>` : '<td class="q"></td>'; }).join('') +
           `<td class="amt ${x.amt > 0 ? 'pos' : 'neg'}">${x.amt > 0 ? '+' : '−'}${lgInr(Math.abs(x.amt))}</td>` +
           (ALL ? `<td class="bal sb">${lgInr(x.bal)}</td><td class="bal">${lgInr(x.tot)}</td>` : `<td class="bal">${lgInr(x.bal)}</td>`) + '</tr>';
-      }).join('') || `<tr><td colspan="${ALL ? 17 : 15}" class="lg-empty">No entries match these filters.</td></tr>`;
-      const split = ALL ? `<tr class="val"><td></td><td colspan="${span}">${data.stores.map(k => lgStoreName(k) + ': <b>' + lgInr(data.led[k].bal) + '</b>').join(' &nbsp;·&nbsp; ')}</td>${DENOM_CONFIG.map((d, i) => `<td class="q">${data.stores.map(k => data.led[k].qty[i]).join(' / ')}</td>`).join('')}<td colspan="3" style="text-align:right">pcs: ${data.stores.map(lgStoreName).join(' / ')}</td></tr>` : '';
-      const foot = `<tfoot><tr class="close"><td>—</td><td colspan="${span}"><b>${ALL ? 'Closing Balance — all stores (pcs in locker)' : 'Closing Balance (pcs in locker)'}</b></td>${led.qty.map(v => `<td class="q"><b>${v}</b></td>`).join('')}<td></td>${extra}<td class="bal">${lgInr(led.bal)}</td></tr>` +
-        `<tr class="val"><td></td><td colspan="${span}">Closing value per denomination</td>${led.qty.map((v, i) => `<td class="q">${v ? lgInr(v * DENOM_CONFIG[i].val) : '—'}</td>`).join('')}<td></td>${extra}<td></td></tr>${split}</tfoot>`;
-      document.getElementById('lgTable').innerHTML = `<table>${head}<tbody>${openRow}${body}</tbody>${foot}</table>`;
+      }).join('') || `<tr><td colspan="${span + (ALL ? 3 : 2)}" class="lg-empty">No entries match these filters.</td></tr>`;
+      const split = ALL ? `<tr class="val"><td colspan="2">${data.stores.map(k => lgStoreName(k) + ': <b>' + lgInr(data.led[k].bal) + '</b>').join('<br>')}<div style="font-size:10px">pcs: ${data.stores.map(lgStoreName).join(' / ')}</div></td>${DI.map(i => `<td class="q">${data.stores.map(k => data.led[k].qty[i]).join('<br>')}</td>`).join('')}<td colspan="3"></td></tr>` : '';
+      const foot = `<tfoot><tr class="close"><td colspan="2"><b>${ALL ? 'Closing — all stores (pcs)' : 'Closing Balance (pcs)'}</b></td>${DI.map(i => `<td class="q"><b>${led.qty[i]}</b></td>`).join('')}<td></td>${extra}<td class="bal">${lgInr(led.bal)}</td></tr>` +
+        `<tr class="val"><td colspan="2">Closing value per denomination</td>${DI.map(i => `<td class="q">${led.qty[i] ? lgInr(led.qty[i] * DENOM_CONFIG[i].val) : '—'}</td>`).join('')}<td></td>${extra}<td></td></tr>${split}</tfoot>`;
+      // Card view for narrow screens (phones / small windows).
+      const cards = r.map(x => {
+        const [d, tm] = lgFmt(x.ts);
+        const dn = DENOM_CONFIG.map((dc, i) => x.q[i] ? `<span class="${x.q[i] > 0 ? 'pos' : 'neg'}">₹${dc.label} ${x.q[i] > 0 ? '+' : '−'}${Math.abs(x.q[i])}</span>` : '').join('');
+        return `<div class="lg-card-row"><div class="l1"><div>${partic(x)}<div class="meta">${d} ${tm} · ${x.ref}</div></div><div class="amtv ${x.amt > 0 ? 'pos' : 'neg'}">${x.amt > 0 ? '+' : '−'}${lgInr(Math.abs(x.amt))}</div></div>` +
+          `<div class="lg-dn">${dn}</div><div class="bals">${ALL ? `<span>${lgStoreName(x.b)}: ${lgInr(x.bal)}</span><span>Total: <b>${lgInr(x.tot)}</b></span>` : `<span>Balance: <b>${lgInr(x.bal)}</b></span>`}</div></div>`;
+      }).join('') || '<div class="lg-empty">No entries match these filters.</div>';
+      const closeCard = `<div class="lg-card-row close"><div class="l1"><b>${ALL ? 'Closing — all stores' : 'Closing Balance'}</b><div class="amtv" style="color:#065f46">${lgInr(led.bal)}</div></div>` +
+        `<div class="grid">${DI.map(i => `<span>₹${DENOM_CONFIG[i].label}: <b>${led.qty[i]}</b></span>`).join('')}</div>` +
+        (ALL ? `<div class="bals">${data.stores.map(k => `<span>${lgStoreName(k)}: <b>${lgInr(data.led[k].bal)}</b></span>`).join('')}</div>` : '') + '</div>';
+      document.getElementById('lgTable').innerHTML = `<table>${head}<tbody>${openRow}${body}</tbody>${foot}</table><div class="lg-cards">${cards}${closeCard}</div>`;
       window.__lgRows = r;
     }
     function lgExportCSV() {
