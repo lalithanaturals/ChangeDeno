@@ -21,7 +21,30 @@
       #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
       .no-print { display: none !important; }
     }
-  </style>
+  
+    /* ---- All Entries: filter toolbar ---- */
+    .ae-bar { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; padding-top: 12px; border-top: 1px solid #f1f5f9; }
+    .ae-field label { display: block; font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+    .ae-field select, .ae-field input { width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 7px 9px; font-size: 12px; font-weight: 500; color: #0f172a; }
+    .ae-field select:focus, .ae-field input:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,.15); background: #fff; }
+    .ae-search { grid-column: span 2; }
+    .ae-custom { display: none; grid-column: span 2; gap: 8px; }
+    .ae-custom.show { display: grid; grid-template-columns: 1fr 1fr; }
+    .ae-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+    .ae-chip { font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; border: 1px solid #e2e8f0; background: #f8fafc; color: #334155; white-space: nowrap; }
+    .ae-chip.in { background: #ecfdf5; border-color: #a7f3d0; color: #047857; }
+    .ae-chip.out { background: #fff1f2; border-color: #fecdd3; color: #be123c; }
+    .ae-chip.net { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+    .ae-reset { margin-left: auto; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: #475569; cursor: pointer; }
+    .ae-reset:hover { background: #f1f5f9; }
+    .ae-pill { display: inline-block; font-size: 9px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; margin-bottom: 3px; }
+    .ae-pill.CASH_IN { background: #d1fae5; color: #065f46; } .ae-pill.CASH_OUT { background: #fee2e2; color: #991b1b; }
+    .ae-pill.TRAY { background: #fef3c7; color: #92400e; } .ae-pill.TRAY_RETURN { background: #ffedd5; color: #9a3412; }
+    .ae-pill.VENDOR { background: #f3e8ff; color: #6b21a8; } .ae-pill.TRANSFER { background: #dbeafe; color: #1e40af; }
+    .ae-pill.DAMAGED { background: #fde68a; color: #78350f; } .ae-pill.BANK_DEPOSIT { background: #e0e7ff; color: #3730a3; }
+    @media (max-width: 1100px) { .ae-bar { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 640px) { .ae-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ae-search, .ae-custom { grid-column: span 2; } }
+</style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
 
@@ -337,32 +360,71 @@
             </div>
           </div>
 
-          <!-- Multi-Field Filters -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-100">
-            <div>
-              <label class="text-[10px] font-bold text-slate-400 uppercase">Filter Store</label>
-              <select id="allEntriesFilterStore" onchange="renderAllEntriesTab()" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-md p-1.5 text-xs font-medium">
-                <option value="all">All Stores</option>
+          <!-- Filters (date / store / type / money / sort / search) -->
+          <div class="ae-bar">
+            <div class="ae-field">
+              <label>Date</label>
+              <select id="aeDate" onchange="aeDateChanged()">
+                <option value="all">All time</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="7">Last 7 days</option>
+                <option value="30">Last 30 days</option>
+                <option value="month">This month</option>
+                <option value="lastmonth">Last month</option>
+                <option value="custom">Custom range…</option>
+              </select>
+            </div>
+            <div class="ae-field">
+              <label>Store</label>
+              <select id="allEntriesFilterStore" onchange="renderAllEntriesTab()">
+                <option value="all">All stores</option>
                 <option value="gajuwaka">Gajuwaka</option>
                 <option value="kurmannapalem">Kurmannapalem</option>
               </select>
             </div>
-            <div>
-              <label class="text-[10px] font-bold text-slate-400 uppercase">Filter Type</label>
-              <select id="allEntriesFilterType" onchange="renderAllEntriesTab()" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-md p-1.5 text-xs font-medium">
-                <option value="all">All Types</option>
-                <option value="CREDIT">Cash In (+)</option>
-                <option value="DEBIT">Cash Out (-)</option>
-                <option value="TRANSFER">Store Transfer</option>
-                <option value="VENDOR_PROCURE">Vendor Change</option>
-                <option value="SOILED_LOG">Damaged Cash Entry</option>
+            <div class="ae-field">
+              <label>Entry type</label>
+              <select id="allEntriesFilterType" onchange="renderAllEntriesTab()">
+                <option value="all">All types</option>
+                <option value="CASH_IN">Cash In</option>
+                <option value="CASH_OUT">Cash Out</option>
+                <option value="TRAY">Cash Added (Tray)</option>
+                <option value="TRAY_RETURN">Returned to Locker</option>
+                <option value="VENDOR">Vendor Change</option>
+                <option value="TRANSFER">Branch Transfer</option>
+                <option value="DAMAGED">Damaged Notes</option>
+                <option value="BANK_DEPOSIT">Bank Deposit</option>
               </select>
             </div>
-            <div>
-              <label class="text-[10px] font-bold text-slate-400 uppercase">Search Reference / Staff</label>
-              <input type="text" id="entriesSearch" onkeyup="renderAllEntriesTab()" placeholder="Search Ref ID..." class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-md p-1.5 text-xs">
+            <div class="ae-field">
+              <label>Money</label>
+              <select id="aeDirection" onchange="renderAllEntriesTab()">
+                <option value="all">In &amp; Out</option>
+                <option value="in">Money In (+)</option>
+                <option value="out">Money Out (−)</option>
+              </select>
+            </div>
+            <div class="ae-field">
+              <label>Sort by</label>
+              <select id="aeSort" onchange="renderAllEntriesTab()">
+                <option value="newest">Date — newest first</option>
+                <option value="oldest">Date — oldest first</option>
+                <option value="amount_desc">Amount — high to low</option>
+                <option value="amount_asc">Amount — low to high</option>
+              </select>
+            </div>
+            <div class="ae-field">
+              <label>Search</label>
+              <input type="text" id="entriesSearch" oninput="renderAllEntriesTab()" placeholder="Ref ID, employee, note…">
+            </div>
+            <div class="ae-custom" id="aeCustom">
+              <div class="ae-field"><label>From</label><input type="date" id="aeFrom" onchange="renderAllEntriesTab()"></div>
+              <div class="ae-field"><label>To</label><input type="date" id="aeTo" onchange="renderAllEntriesTab()"></div>
             </div>
           </div>
+          <div class="ae-summary" id="aeSummary"></div>
+        </div>
         </div>
 
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -1667,6 +1729,71 @@
       return entryDenomSummary(t);
     }
 
+    // ---- ALL ENTRIES: filter helpers -------------------------------------
+    const AE_KIND_LABEL = { CASH_IN: 'Cash In', CASH_OUT: 'Cash Out', TRAY: 'Cash Added', TRAY_RETURN: 'Returned', VENDOR: 'Vendor', TRANSFER: 'Transfer', DAMAGED: 'Damaged', BANK_DEPOSIT: 'Bank Deposit' };
+    function aeEntryKind(t) {
+      const ref = String(t.refId || ''), cat = String(t.category || '');
+      if (/^TRAY-RET-/.test(ref) || /^Returned from Cash Added/.test(cat)) return 'TRAY_RETURN';
+      if (/^TRAY-/.test(ref)) return 'TRAY';
+      if (t.type === 'VENDOR_PROCURE' || /vendor change/i.test(cat)) return 'VENDOR';
+      if (t.type === 'TRANSFER') return 'TRANSFER';
+      if (t.type === 'SOILED_LOG') return 'DAMAGED';
+      if (/^Damaged Bank Deposit/.test(cat)) return 'BANK_DEPOSIT';
+      if (t.type === 'CREDIT') return 'CASH_IN';
+      if (t.type === 'DEBIT') return 'CASH_OUT';
+      return Number(t.amount) > 0 ? 'CASH_IN' : 'CASH_OUT';
+    }
+    // when the entry was recorded (ms), or its saved date for older entries
+    function aeEntryTime(t) {
+      if (t.ts) return Number(t.ts);
+      const m = String(t.date || '').match(/(\d{1,2})\s+([A-Za-z]{3})[a-z]*,?\s+(\d{4})/);
+      if (!m) return null;
+      const mon = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].indexOf(m[2].toLowerCase());
+      return mon < 0 ? null : new Date(Number(m[3]), mon, Number(m[1]), 12).getTime();
+    }
+    function aeDateRange() {
+      const v = document.getElementById('aeDate')?.value || 'all';
+      const d0 = (y, m, d) => new Date(y, m, d).getTime();
+      const n = new Date(), Y = n.getFullYear(), M = n.getMonth(), D = n.getDate(), day = 86400000;
+      if (v === 'today') return [d0(Y, M, D), d0(Y, M, D) + day];
+      if (v === 'yesterday') return [d0(Y, M, D) - day, d0(Y, M, D)];
+      if (v === '7') return [d0(Y, M, D) - 6 * day, d0(Y, M, D) + day];
+      if (v === '30') return [d0(Y, M, D) - 29 * day, d0(Y, M, D) + day];
+      if (v === 'month') return [d0(Y, M, 1), d0(Y, M + 1, 1)];
+      if (v === 'lastmonth') return [d0(Y, M - 1, 1), d0(Y, M, 1)];
+      if (v === 'custom') {
+        const f = document.getElementById('aeFrom')?.value, to = document.getElementById('aeTo')?.value;
+        if (!f && !to) return null;
+        const p = s2 => { const [y, m, d] = s2.split('-').map(Number); return d0(y, m - 1, d); };
+        let a = f ? p(f) : 0, b = to ? p(to) + day : 8.64e15;
+        if (a > b) [a, b] = [b - day, a + day];
+        return [a, b];
+      }
+      return null;
+    }
+    function aeDateChanged() {
+      const custom = document.getElementById('aeDate').value === 'custom';
+      document.getElementById('aeCustom').classList.toggle('show', custom);
+      if (custom && !document.getElementById('aeFrom').value) {
+        const t = new Date(), iso = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+        document.getElementById('aeFrom').value = iso; document.getElementById('aeTo').value = iso;
+      }
+      renderAllEntriesTab();
+    }
+    function aeActiveFilterCount() {
+      let c = 0;
+      ['aeDate', 'allEntriesFilterStore', 'allEntriesFilterType', 'aeDirection'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== 'all') c++; });
+      if ((document.getElementById('entriesSearch')?.value || '').trim()) c++;
+      return c;
+    }
+    function aeResetFilters() {
+      ['aeDate', 'allEntriesFilterStore', 'allEntriesFilterType', 'aeDirection'].forEach(id => { const el = document.getElementById(id); if (el) el.value = 'all'; });
+      const so = document.getElementById('aeSort'); if (so) so.value = 'newest';
+      ['entriesSearch', 'aeFrom', 'aeTo'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      document.getElementById('aeCustom').classList.remove('show');
+      renderAllEntriesTab();
+    }
+
     function renderAllEntriesTab() {
       const tbody = document.getElementById('all-entries-body');
       const eraseBtn = document.getElementById('eraseAllDataBtn');
@@ -1680,31 +1807,49 @@
 
       const filterStore = document.getElementById('allEntriesFilterStore')?.value || 'all';
       const filterType = document.getElementById('allEntriesFilterType')?.value || 'all';
-      const search = (document.getElementById('entriesSearch')?.value || '').toLowerCase();
+      const direction = document.getElementById('aeDirection')?.value || 'all';
+      const sortBy = document.getElementById('aeSort')?.value || 'newest';
+      const search = (document.getElementById('entriesSearch')?.value || '').trim().toLowerCase();
+      const range = aeDateRange();
 
-      let entries = [...appState.transactions].reverse();
+      // keep original order as a tie-breaker (later in the ledger = newer)
+      let entries = appState.transactions.map((t, i) => Object.assign({}, t, { __i: i }));
 
-      if (filterStore !== 'all') {
-        entries = entries.filter(t => t.branch.toLowerCase().includes(filterStore));
+      if (range) entries = entries.filter(t => { const ts = aeEntryTime(t); return ts !== null && ts >= range[0] && ts < range[1]; });
+      if (filterStore !== 'all') entries = entries.filter(t => (lockerResolveBranchKey(t.branch) || String(t.branch || '').toLowerCase()) === filterStore);
+      if (filterType !== 'all') entries = entries.filter(t => aeEntryKind(t) === filterType);
+      if (direction === 'in') entries = entries.filter(t => Number(t.amount) > 0);
+      if (direction === 'out') entries = entries.filter(t => Number(t.amount) < 0);
+      if (search) {
+        entries = entries.filter(t => [t.refId, t.handler, t.category, entryRemarks(t), t.branch, AE_KIND_LABEL[aeEntryKind(t)]]
+          .some(v => String(v || '').toLowerCase().includes(search)));
       }
-      if (filterType !== 'all') {
-        if (filterType === 'VENDOR_PROCURE') {
-          entries = entries.filter(t => t.type === 'VENDOR_PROCURE' || (t.category && t.category.toLowerCase().includes('vendor change')));
-        } else {
-          entries = entries.filter(t => t.type === filterType);
-        }
-      }
-      if (search.trim() !== '') {
-        entries = entries.filter(t => 
-          t.refId.toLowerCase().includes(search) || 
-          t.handler.toLowerCase().includes(search) || 
-          (t.category && t.category.toLowerCase().includes(search)) ||
-          (entryRemarks(t).toLowerCase().includes(search))
-        );
+
+      const tsOrIndex = t => { const ts = aeEntryTime(t); return ts === null ? -1 : ts; };
+      entries.sort((x, y) => {
+        if (sortBy === 'amount_desc') return Math.abs(y.amount) - Math.abs(x.amount) || y.__i - x.__i;
+        if (sortBy === 'amount_asc') return Math.abs(x.amount) - Math.abs(y.amount) || y.__i - x.__i;
+        const d = tsOrIndex(x) - tsOrIndex(y) || x.__i - y.__i;
+        return sortBy === 'oldest' ? d : -d;
+      });
+      window.__aeFiltered = entries;
+
+      const totIn = entries.filter(t => t.amount > 0).reduce((s2, t) => s2 + Number(t.amount), 0);
+      const totOut = entries.filter(t => t.amount < 0).reduce((s2, t) => s2 - Number(t.amount), 0);
+      const fmtR = n => '₹' + Number(n || 0).toLocaleString('en-IN');
+      const summary = document.getElementById('aeSummary');
+      if (summary) {
+        const active = aeActiveFilterCount();
+        summary.innerHTML = `
+          <span class="ae-chip">${entries.length} entr${entries.length === 1 ? 'y' : 'ies'}${active ? ' · ' + active + ' filter' + (active > 1 ? 's' : '') + ' on' : ''}</span>
+          <span class="ae-chip in">In ${fmtR(totIn)}</span>
+          <span class="ae-chip out">Out ${fmtR(totOut)}</span>
+          <span class="ae-chip net">Net ${totIn - totOut >= 0 ? '+' : '−'}${fmtR(Math.abs(totIn - totOut))}</span>
+          ${active ? '<button type="button" class="ae-reset" onclick="aeResetFilters()">↺ Reset filters</button>' : ''}`;
       }
 
       if (entries.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-400 font-sans">No entries recorded yet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-400 font-sans">${aeActiveFilterCount() ? 'No entries match these filters.' : 'No entries recorded yet.'}</td></tr>`;
         return;
       }
 
@@ -1718,6 +1863,7 @@
           <td class="p-3 text-slate-500 text-[11px] font-mono">${t.date}</td>
           <td class="p-3 capitalize font-semibold text-slate-700 font-sans">${t.branch}</td>
           <td class="p-3 text-slate-700 font-sans">
+            <span class="ae-pill ${aeEntryKind(t)}">${AE_KIND_LABEL[aeEntryKind(t)]}</span>
             <div class="font-bold">${t.category}</div>
             <div class="text-[10px] text-slate-500 font-normal">${entryRemarks(t) || 'No remarks'}</div>
           </td>
@@ -3256,7 +3402,7 @@
 
     function exportCSV() {
       let csv = "Reference ID,Date,Type,Store,Category,Amount,Employee,Remarks\n";
-      appState.transactions.forEach(t => { csv += `"${t.refId}","${t.date}","${t.type}","${t.branch}","${t.category}","${t.amount}","${t.handler}","${entryRemarks(t)}"\n`; });
+      (window.__aeFiltered || appState.transactions).forEach(t => { csv += `"${t.refId}","${t.date}","${AE_KIND_LABEL[aeEntryKind(t)]}","${t.branch}","${t.category}","${t.amount}","${t.handler}","${entryRemarks(t)}"\n`; });
       const blob = new Blob([csv], { type: 'text/csv' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `Lalitha_Naturals_Cash_Ledger_${new Date().toISOString().slice(0,10)}.csv`; a.click();
